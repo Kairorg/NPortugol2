@@ -9,6 +9,10 @@ namespace NPortugol.Blazor;
 /// A saída vai para um buffer e o <c>leia()</c> consome as linhas do campo "Entrada",
 /// porque o navegador não pode bloquear esperando o teclado.
 /// </summary>
+/// <remarks>
+/// Um host que executa passo a passo (o Raio-X) pode parar antes de um <c>leia()</c> quando
+/// <see cref="LinhasPendentes"/> é zero, pedir o valor ao usuário e entregá-lo com <see cref="Fornecer"/>.
+/// </remarks>
 public sealed class ModuloEntradaSaida : IModulo
 {
     private readonly StringBuilder saida = new();
@@ -35,6 +39,19 @@ public sealed class ModuloEntradaSaida : IModulo
     public Dictionary<string, Func<object[], object>> Functions { get; }
 
     public string Saida => saida.ToString();
+
+    /// <summary>Linhas de entrada que ainda não foram lidas.</summary>
+    public int LinhasPendentes => entrada.Count;
+
+    /// <summary>
+    /// Acrescenta uma linha à entrada, digitada pelo usuário durante a execução. Ela é ecoada na
+    /// saída, como num terminal.
+    /// </summary>
+    public void Fornecer(string linha)
+    {
+        entrada.Enqueue(linha);
+        saida.Append(linha).Append('\n');
+    }
 
     private object Imprima(object[] args)
     {

@@ -57,12 +57,13 @@
     <div class="corpo @(lateralVisivel ? "" : "sem-lateral")">
         @* ---- Barra de atividades ---- *@
         <nav class="atividades" aria-label="Vistas">
-            <button class="atividade @(lateralVisivel && vista == Vista.Explorador ? "ativa" : "")"
-                    @onclick="() => AlternarVista(Vista.Explorador)" title="Explorador" aria-label="Explorador">
+            <button class="atividade @(lateralVisivel ? "ativa" : "")" @onclick="() => lateralVisivel = !lateralVisivel"
+                    title="Explorador" aria-label="Explorador" aria-pressed="@lateralVisivel">
                 <Icone Nome="explorador" Tamanho="24" />
             </button>
-            <button class="atividade @(lateralVisivel && vista == Vista.Execucao ? "ativa" : "")"
-                    @onclick="() => AlternarVista(Vista.Execucao)" title="Execução e depuração" aria-label="Execução e depuração">
+            <button class="atividade @(painelInferior == PainelInferior.Depuracao ? "ativa" : "")"
+                    @onclick="() => painelInferior = PainelInferior.Depuracao" title="Execução e depuração (painel inferior)"
+                    aria-label="Execução e depuração">
                 <Icone Nome="execucao" Tamanho="24" />
                 @if (Depurando)
                 {
@@ -72,53 +73,45 @@
         </nav>
 
         @* ---- Barra lateral ---- *@
-        <aside class="lateral" aria-label="@(vista == Vista.Explorador ? "Explorador" : "Execução")">
-            <div class="lateral-titulo">@(vista == Vista.Explorador ? "Explorador" : "Execução e depuração")</div>
+        <aside class="lateral" aria-label="Explorador">
+            <div class="lateral-titulo">Explorador</div>
             <div class="lateral-conteudo">
-                @if (vista == Vista.Explorador)
-                {
-                    <SecaoLateral Titulo="Exemplos">
+                <SecaoLateral Titulo="Exemplos">
+                    <ul class="lista-itens">
+                        @foreach (var exemplo in Exemplos.Todos)
+                        {
+                            <li>
+                                <button class="item @(exemplo.Id == exemploSelecionado ? "selecionado" : "")"
+                                        @onclick="() => CarregarExemplo(exemplo)" disabled="@Depurando">
+                                    <Icone Nome="arquivo" Tamanho="14" />
+                                    <span class="item-texto">@exemplo.Titulo</span>
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </SecaoLateral>
+
+                <SecaoLateral Titulo="Estrutura" Contador="@funcoes.Count">
+                    @if (funcoes.Count == 0)
+                    {
+                        <p class="vazio">Nenhuma função.</p>
+                    }
+                    else
+                    {
                         <ul class="lista-itens">
-                            @foreach (var exemplo in Exemplos.Todos)
+                            @foreach (var f in funcoes)
                             {
                                 <li>
-                                    <button class="item @(exemplo.Id == exemploSelecionado ? "selecionado" : "")"
-                                            @onclick="() => CarregarExemplo(exemplo)" disabled="@Depurando">
-                                        <Icone Nome="arquivo" Tamanho="14" />
-                                        <span class="item-texto">@exemplo.Titulo</span>
+                                    <button class="item" @onclick="() => IrPara(f.Linha, 1)" title="Ir para a linha @f.Linha">
+                                        <Icone Nome="funcao" Tamanho="14" Classe="icone-funcao" />
+                                        <span class="item-texto">@f.Nome<span class="parametros">(@f.Parametros)</span></span>
+                                        <span class="item-detalhe">L@(f.Linha)</span>
                                     </button>
                                 </li>
                             }
                         </ul>
-                    </SecaoLateral>
-
-                    <SecaoLateral Titulo="Estrutura" Contador="@funcoes.Count">
-                        @if (funcoes.Count == 0)
-                        {
-                            <p class="vazio">Nenhuma função.</p>
-                        }
-                        else
-                        {
-                            <ul class="lista-itens">
-                                @foreach (var f in funcoes)
-                                {
-                                    <li>
-                                        <button class="item" @onclick="() => IrPara(f.Linha, 1)" title="Ir para a linha @f.Linha">
-                                            <Icone Nome="funcao" Tamanho="14" Classe="icone-funcao" />
-                                            <span class="item-texto">@f.Nome<span class="parametros">(@f.Parametros)</span></span>
-                                            <span class="item-detalhe">L@(f.Linha)</span>
-                                        </button>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                    </SecaoLateral>
-                }
-                else
-                {
-                    <EstadoDaVm Ativa="@(sessao is not null)" Variaveis="variaveis"
-                                PilhaDeAvaliacao="pilhaDeAvaliacao" PilhaDeChamadas="pilhaDeChamadas" />
-                }
+                    }
+                </SecaoLateral>
             </div>
         </aside>
 
@@ -129,20 +122,68 @@
         <div class="centro">
             <div class="grupo-editor">
                 <div class="abas-editor">
-                    <div class="aba-editor ativa">
-                        <Icone Nome="arquivo" Tamanho="14" />
-                        <span>@NomeDoArquivo</span>
-                        @if (Depurando)
+                    <div class="abas-grupo" role="tablist">
+                        <button role="tab" class="aba-editor @(abaEditor == AbaEditor.Codigo ? "ativa" : "")"
+                                aria-selected="@(abaEditor == AbaEditor.Codigo)" @onclick="() => abaEditor = AbaEditor.Codigo">
+                            <Icone Nome="arquivo" Tamanho="14" />
+                            <span>@NomeDoArquivo</span>
+                            @if (Depurando)
+                            {
+                                <span class="selo">somente leitura</span>
+                            }
+                        </button>
+                        @if (arvoreAberta)
                         {
-                            <span class="selo">somente leitura</span>
+                            <div class="aba-editor @(abaEditor == AbaEditor.Arvore ? "ativa" : "")">
+                                <button role="tab" class="aba-editor-rotulo" aria-selected="@(abaEditor == AbaEditor.Arvore)"
+                                        @onclick="() => abaEditor = AbaEditor.Arvore">
+                                    <Icone Nome="arvore" Tamanho="14" />
+                                    <span>Árvore sintática</span>
+                                </button>
+                                <button class="fechar-aba" @onclick="FecharArvore" title="Fechar a árvore sintática" aria-label="Fechar a árvore sintática">
+                                    <Icone Nome="fechar" Tamanho="12" />
+                                </button>
+                            </div>
                         }
                     </div>
+                    <div class="acoes-editor">
+                    @if (linguagem == Linguagem.NPortugol && !arvoreAberta)
+                    {
+                        <button class="acao-painel" @onclick="AbrirArvore" disabled="@(validos is null)"
+                                title="Gerar a árvore sintática (AST) do programa e abri-la numa aba">
+                            <Icone Nome="arvore" Tamanho="14" /> Ver árvore
+                        </button>
+                    }
+                    <div class="seletor-linguagem" role="radiogroup" aria-label="Linguagem do editor">
+                        <button role="radio" class="opcao-linguagem @(linguagem == Linguagem.NPortugol ? "ativa" : "")"
+                                aria-checked="@(linguagem == Linguagem.NPortugol)" disabled="@(Depurando || !pronto)"
+                                @onclick="() => MudarLinguagem(Linguagem.NPortugol)" title="Escrever em NPortugol">
+                            NPortugol
+                        </button>
+                        <button role="radio" class="opcao-linguagem @(linguagem == Linguagem.Assembly ? "ativa" : "")"
+                                aria-checked="@(linguagem == Linguagem.Assembly)" disabled="@(Depurando || !pronto)"
+                                @onclick="() => MudarLinguagem(Linguagem.Assembly)" title="Escrever direto no assembly da VM">
+                            Assembly
+                        </button>
+                    </div>
+                    </div>
                 </div>
-                <div class="editor-area" aria-label="Código do programa">
+                @* O editor fica sempre montado (só escondido), para não perder o estado do Monaco. *@
+                <div class="editor-area @(abaEditor == AbaEditor.Codigo ? "" : "oculta")" aria-label="Código do programa">
                     <StandaloneCodeEditor @ref="editor" Id="@IdEditor" CssClass="editor"
                                           ConstructionOptions="OpcoesDoEditor" OnDidInit="EditorIniciado"
                                           OnDidChangeModelContent="AoEditar" OnDidChangeCursorPosition="AoMoverCursor" />
                 </div>
+                @if (arvoreAberta && abaEditor == AbaEditor.Arvore)
+                {
+                    <div class="arvore-aba">
+                        @if (compilacao is { Sucesso: false })
+                        {
+                            <div class="aviso">O código tem erro; mostrando a última versão que compilou.</div>
+                        }
+                        <VisaoDaArvore Arvore="arvore" Selecionado="noSelecionado" AoSelecionar="SelecionarNo" AoAbrir="AbrirNoNoCodigo" />
+                    </div>
+                }
             </div>
 
             <div class="divisor divisor-inferior" role="separator" aria-orientation="horizontal" aria-label="Redimensionar o painel inferior"
@@ -160,6 +201,14 @@
                             <span class="contador">@LinhasDeEntrada</span>
                         }
                     </button>
+                    <button role="tab" class="aba-painel @(painelInferior == PainelInferior.Depuracao ? "ativa" : "")"
+                            aria-selected="@(painelInferior == PainelInferior.Depuracao)" @onclick="() => painelInferior = PainelInferior.Depuracao">
+                        Depuração
+                        @if (Depurando)
+                        {
+                            <span class="ponto-ativo" title="Depurando" aria-label="depurando"></span>
+                        }
+                    </button>
                     <button role="tab" class="aba-painel @(painelInferior == PainelInferior.Problemas ? "ativa" : "")"
                             aria-selected="@(painelInferior == PainelInferior.Problemas)" @onclick="() => painelInferior = PainelInferior.Problemas">
                         Problemas
@@ -170,9 +219,13 @@
                     </button>
                 </div>
 
-                <div class="painel-conteudo">
+                <div class="painel-conteudo @(painelInferior == PainelInferior.Depuracao ? "sem-margem" : "")">
                     @switch (painelInferior)
                     {
+                        case PainelInferior.Depuracao:
+                            <EstadoDaVm Ativa="@(sessao is not null)" Variaveis="variaveis"
+                                        PilhaDeAvaliacao="pilhaDeAvaliacao" PilhaDeChamadas="pilhaDeChamadas" />
+                            break;
                         case PainelInferior.Saida:
                             <div class="saida" aria-live="polite">
                                 @if (saida.Length > 0)
@@ -227,17 +280,19 @@
         <div class="divisor divisor-direito" role="separator" aria-orientation="vertical" aria-label="Redimensionar o painel direito"
              data-divisor="--largura-direita" data-direcao="x" data-sinal="-1" data-min="260" data-max="1200"></div>
 
-        @* ---- Painel direito: árvore e assembly ---- *@
+        @* ---- Painel direito: o assembly que a VM executa ---- *@
         <section class="painel painel-direito">
-            <div class="abas-painel" role="tablist">
-                <button role="tab" class="aba-painel @(painelDireito == PainelDireito.Arvore ? "ativa" : "")"
-                        aria-selected="@(painelDireito == PainelDireito.Arvore)" @onclick="() => painelDireito = PainelDireito.Arvore">
-                    <Icone Nome="arvore" Tamanho="14" /> Árvore sintática
-                </button>
-                <button role="tab" class="aba-painel @(painelDireito == PainelDireito.Assembly ? "ativa" : "")"
-                        aria-selected="@(painelDireito == PainelDireito.Assembly)" @onclick="() => painelDireito = PainelDireito.Assembly">
-                    <Icone Nome="assembly" Tamanho="14" /> Assembly
-                </button>
+            <div class="abas-painel">
+                <span class="titulo-painel"><Icone Nome="assembly" Tamanho="14" /> Assembly</span>
+                @if (linguagem == Linguagem.NPortugol)
+                {
+                    <div class="acoes-painel">
+                        <button class="acao-painel" @onclick="EditarAssembly" disabled="@(validos is null || Depurando)"
+                                title="Abrir este assembly no editor, para modificá-lo e executá-lo">
+                            <Icone Nome="editar" Tamanho="14" /> Editar
+                        </button>
+                    </div>
+                }
             </div>
 
             <div class="painel-conteudo sem-margem">
@@ -246,16 +301,9 @@
                     <div class="aviso">O código tem erro; mostrando a última versão que compilou.</div>
                 }
 
-                @if (painelDireito == PainelDireito.Arvore)
-                {
-                    <VisaoDaArvore Arvore="arvore" Selecionado="noSelecionado" AoSelecionar="SelecionarNo" />
-                }
-                else
-                {
-                    <VisaoDoAssembly Linhas="validos?.Bytecode?.Script" Mapa="validos?.Mapa"
-                                     Atual="sessao?.ProximaInstrucao" LinhaSelecionada="linhaSelecionada"
-                                     AoClicarLinha="SelecionarLinha" />
-                }
+                <VisaoDoAssembly Linhas="validos?.Bytecode?.Script" Mapa="validos?.Mapa"
+                                 Atual="sessao?.ProximaInstrucao" LinhaSelecionada="linhaSelecionada"
+                                 AoClicarLinha="SelecionarLinha" />
             </div>
         </section>
     </div>
@@ -267,6 +315,10 @@
         {
             <span class="status-item">@validos.Bytecode!.Script.Count linhas de assembly</span>
         }
+        @if (linguagem == Linguagem.Assembly)
+        {
+            <span class="status-item">Assembly da VM</span>
+        }
         @if (sessao is not null)
         {
             <span class="status-item">@sessao.InstrucoesExecutadas instruções executadas</span>
@@ -275,40 +327,79 @@
         <span class="status-item">Ln @linhaCursor, Col @colunaCursor</span>
         <span class="status-item">NPortugol</span>
     </footer>
+
+    @* ---- Janela do leia(): aberta quando o programa pede uma linha que a aba Entrada não tem ---- *@
+    @if (passoPendente is not null)
+    {
+        <div class="modal-fundo">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-leia" aria-describedby="descricao-leia">
+                <h2 id="titulo-leia" class="modal-titulo">O programa está esperando uma entrada</h2>
+                <p id="descricao-leia" class="modal-texto">
+                    @(sessao?.LinhaAtual is int linhaDoLeia ? $"A linha {linhaDoLeia} chamou " : "O programa chamou ")<code>leia()</code>
+                    e não há mais linhas na aba Entrada.
+                </p>
+                @if (UltimasLinhasDaSaida is { Length: > 0 } ultimas)
+                {
+                    <pre class="modal-saida" aria-label="Últimas linhas da saída">@ultimas</pre>
+                }
+                <input @ref="campoDigitado" class="campo-leia" spellcheck="false" autocomplete="off"
+                       aria-label="Valor para o leia()" placeholder="Digite o valor e tecle Enter"
+                       @bind="textoDigitado" @bind:event="oninput" @onkeydown="TeclaNoCampo" />
+                <div class="modal-acoes">
+                    <button class="ferramenta perigo" @onclick="CancelarEntrada" title="Parar a execução (Esc)">
+                        <Icone Nome="parar" /><span>Parar</span>
+                    </button>
+                    <button class="ferramenta destaque" @onclick="EnviarEntrada" title="Entregar o valor ao leia() (Enter)">
+                        <span>Enviar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
-    private enum Vista { Explorador, Execucao }
-    private enum PainelInferior { Saida, Entrada, Problemas }
-    private enum PainelDireito { Arvore, Assembly }
+    private enum PainelInferior { Saida, Entrada, Depuracao, Problemas }
+    private enum AbaEditor { Codigo, Arvore }
 
-    private sealed record Funcao(string Nome, string Parametros, int Linha);
     private sealed record Problema(string Mensagem, int? Linha, int? Coluna);
 
     private const string IdEditor = "editor";
+
+    private const string AssemblyInicial =
+        "// Assembly da VM do NPortugol. A execução começa na função main.\n" +
+        "main:\n" +
+        "PUSH \"Olá, assembly!\"\n" +
+        "CALL imprimaLinha\n" +
+        "RET\n";
 
     private StandaloneCodeEditor editor = null!;
     private DotNetObjectReference<RaioX>? referencia;
     private string codigoInicial = string.Empty;
     private string entrada = string.Empty;
     private string exemploSelecionado = string.Empty;
-    private string nomeDoArquivo = "programa.np";
+    private string nomeDoArquivo = "programa";
     private string textoCompartilhar = "Compartilhar";
     private bool pronto;
 
+    // Linguagem do editor; o texto da outra linguagem fica guardado para quando o usuário voltar.
+    private Linguagem linguagem = Linguagem.NPortugol;
+    private readonly Dictionary<Linguagem, string> codigoGuardado = new();
+
     // Layout.
-    private Vista vista = Vista.Explorador;
     private bool lateralVisivel = true;
     private PainelInferior painelInferior = PainelInferior.Saida;
-    private PainelDireito painelDireito = PainelDireito.Arvore;
+    private AbaEditor abaEditor = AbaEditor.Codigo;
     private int linhaCursor = 1;
     private int colunaCursor = 1;
 
     // Compilação atual e a última que deu certo (mostrada enquanto o código tem erro).
     private Compilacao? compilacao;
     private Compilacao? validos;
+    // A árvore só é gerada quando o usuário pede, e deixa de ser atualizada quando ele a fecha.
+    private bool arvoreAberta;
     private ArvoreDesenhada? arvore;
-    private IReadOnlyList<Funcao> funcoes = Array.Empty<Funcao>();
+    private IReadOnlyList<FuncaoDoPrograma> funcoes = Array.Empty<FuncaoDoPrograma>();
     private int? noSelecionado;
     private int? linhaSelecionada;
 
@@ -322,11 +413,35 @@
     private int? instrucaoRolada;
     private CancellationTokenSource? atrasoDaCompilacao;
 
-    private bool Depurando => sessao is { Concluida: false };
+    // Passo a passo (F5) ou execução direta (Ctrl+F5); as duas podem parar num leia() sem entrada.
+    private enum Passo { Continuar, ProximaLinha, ProximaInstrucao }
+    private bool passoAPasso;
+
+    // O passo interrompido por um leia() sem entrada; enquanto não é nulo, a janela do leia() fica aberta.
+    private Passo? passoPendente;
+    private string textoDigitado = string.Empty;
+    private ElementReference campoDigitado;
+    private bool focarCampoDigitado;
+
+    private bool Depurando => passoAPasso && sessao is { Concluida: false };
+
+    private bool AguardandoEntrada => passoPendente is not null;
+
+    // O texto que o programa imprimiu logo antes do leia() costuma ser a pergunta ("Digite um número:").
+    private string UltimasLinhasDaSaida
+    {
+        get
+        {
+            var linhas = saida.TrimEnd('\n').Split('\n');
+            return string.Join("\n", linhas.TakeLast(4)).Trim();
+        }
+    }
 
     private bool PodeExecutar => pronto && compilacao is { Sucesso: true };
 
-    private string NomeDoArquivo => nomeDoArquivo;
+    private string NomeDoArquivo => nomeDoArquivo + (linguagem == Linguagem.Assembly ? ".asm" : ".np");
+
+    private static string IdDaLinguagem(Linguagem l) => l == Linguagem.Assembly ? "nportugol-asm" : "nportugol";
 
     private int LinhasDeEntrada => entrada.Replace("\r", "").Split('\n', StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -350,36 +465,37 @@
 
     private string ClasseModo => this switch
     {
-        _ when Depurando => "modo-depurando",
+        _ when Depurando || AguardandoEntrada => "modo-depurando",
         _ when compilacao is { Sucesso: false } || sessao?.Erro is not null => "modo-erro",
         _ => "modo-pronto",
     };
 
     private string TextoModo => this switch
     {
+        _ when AguardandoEntrada => $"Esperando entrada: linha {sessao!.LinhaAtual}",
         _ when Depurando => $"Depurando: linha {sessao!.LinhaAtual}",
-        _ when compilacao is { Sucesso: false } => "Erro de compilação",
+        _ when compilacao is { Sucesso: false } => linguagem == Linguagem.Assembly ? "Erro de montagem" : "Erro de compilação",
         _ when sessao?.Erro is not null => "Erro de execução",
         _ when sessao is { Concluida: true } => "Execução concluída",
-        _ when compilacao is { Sucesso: true } => "Compilado",
+        _ when compilacao is { Sucesso: true } => linguagem == Linguagem.Assembly ? "Montado" : "Compilado",
         _ => "Carregando…",
     };
 
     protected override void OnInitialized()
     {
-        if (LinkCompartilhavel.TentarDecodificar(new Uri(Navegacao.Uri).Fragment, out var codigo, out var entradaDoLink))
+        if (LinkCompartilhavel.TentarDecodificar(new Uri(Navegacao.Uri).Fragment, out var codigo, out var entradaDoLink, out var assembly))
         {
             codigoInicial = codigo;
             entrada = entradaDoLink;
-            nomeDoArquivo = "compartilhado.np";
+            linguagem = assembly ? Linguagem.Assembly : Linguagem.NPortugol;
+            nomeDoArquivo = "compartilhado";
             return;
         }
 
         var primeiro = Exemplos.Todos.First(e => e.Id == "Fatorial");
         codigoInicial = primeiro.Codigo;
-        entrada = primeiro.Entrada;
         exemploSelecionado = primeiro.Id;
-        nomeDoArquivo = primeiro.Id + ".np";
+        nomeDoArquivo = primeiro.Id;
     }
 
     private StandaloneEditorConstructionOptions OpcoesDoEditor(StandaloneCodeEditor _) => new()
@@ -398,6 +514,8 @@
     private async Task EditorIniciado()
     {
         await JS.InvokeVoidAsync("nportugol.conectar", IdEditor);
+        if (linguagem == Linguagem.Assembly)
+            await JS.InvokeVoidAsync("raiox.definirLinguagem", IdEditor, IdDaLinguagem(linguagem));
 
         referencia = DotNetObjectReference.Create(this);
         await JS.InvokeVoidAsync("raiox.registrarAtalhos", referencia);
@@ -412,9 +530,15 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (focarCampoDigitado)
+        {
+            focarCampoDigitado = false;
+            await campoDigitado.FocusAsync();
+        }
+
         // Mantém a instrução atual visível na lista do assembly.
         var atual = sessao?.ProximaInstrucao;
-        if (painelDireito == PainelDireito.Assembly && atual is int i && i != instrucaoRolada)
+        if (atual is int i && i != instrucaoRolada)
         {
             instrucaoRolada = i;
             await JS.InvokeVoidAsync("nportugol.rolarAte", $"asm-{i}");
@@ -424,6 +548,14 @@
     [JSInvokable]
     public async Task Atalho(string nome)
     {
+        // Com a janela do leia() aberta, só Shift+F5 (parar) vale; Enter e Esc são tratados no campo.
+        if (AguardandoEntrada)
+        {
+            if (nome == "parar") await CancelarEntrada();
+            StateHasChanged();
+            return;
+        }
+
         switch (nome)
         {
             case "depurar" when Depurando:
@@ -433,7 +565,7 @@
                 await Depurar();
                 break;
             case "executar" when !Depurando && PodeExecutar:
-                Executar();
+                await Executar();
                 break;
             case "proxima-linha" when Depurando:
                 await ProximaLinha();
@@ -447,19 +579,6 @@
         }
 
         StateHasChanged();
-    }
-
-    private void AlternarVista(Vista nova)
-    {
-        // Clicar na vista que já está aberta fecha a barra lateral, como nas IDEs.
-        if (lateralVisivel && vista == nova)
-        {
-            lateralVisivel = false;
-            return;
-        }
-
-        vista = nova;
-        lateralVisivel = true;
     }
 
     #region compilação ao vivo
@@ -487,7 +606,7 @@
     private async Task Recompilar()
     {
         var codigo = await editor.GetValue();
-        compilacao = Compilacao.De(codigo);
+        compilacao = Compilacao.De(codigo, linguagem);
 
         await JS.InvokeVoidAsync("nportugol.limparErros", IdEditor);
         await JS.InvokeVoidAsync("nportugol.destacarTrecho", IdEditor, 0, 0, 0, 0);
@@ -496,13 +615,8 @@
         if (compilacao.Sucesso)
         {
             validos = compilacao;
-            arvore = LayoutDaArvore.Calcular(compilacao.Ast!);
-            funcoes = compilacao.Ast!.Children
-                .Select(f => new Funcao(
-                    f.GetChild(0).Text,
-                    string.Join(", ", f.Children.Where(c => c.Kind == AstKind.Param).SelectMany(p => p.Children).Select(p => p.Text)),
-                    f.GetChild(0).Line))
-                .ToList();
+            if (arvoreAberta && compilacao.Ast is not null) arvore = LayoutDaArvore.Calcular(compilacao.Ast);
+            funcoes = compilacao.Funcoes;
         }
         else if (compilacao.ErroDeCompilacao is { Line: > 0 } e)
         {
@@ -520,47 +634,89 @@
 
     #region execução e depuração
 
-    private void Executar()
+    private async Task Executar()
     {
         if (!IniciarSessao()) return;
 
+        passoAPasso = false;
         painelInferior = PainelInferior.Saida;
-        sessao!.Continuar();
-        AtualizarEstado();
+        await Avancar(Passo.Continuar);
     }
 
     private async Task Depurar()
     {
         if (!IniciarSessao()) return;
 
-        vista = Vista.Execucao;
-        painelDireito = PainelDireito.Assembly;
-        painelInferior = PainelInferior.Saida;
+        passoAPasso = true;
+        abaEditor = AbaEditor.Codigo; // a linha atual é destacada no editor
+        painelInferior = PainelInferior.Depuracao;
         noSelecionado = null;
         await JS.InvokeVoidAsync("nportugol.destacarTrecho", IdEditor, 0, 0, 0, 0);
         await editor.UpdateOptions(new EditorUpdateOptions { ReadOnly = true });
 
         // Avança até a primeira linha do script, para o destaque começar no código.
-        sessao!.ProximaLinha();
-        await AtualizarDepuracao();
+        await Avancar(Passo.ProximaLinha);
     }
 
-    private async Task ProximaLinha()
+    private Task ProximaLinha() => Avancar(Passo.ProximaLinha);
+
+    private Task ProximaInstrucao() => Avancar(Passo.ProximaInstrucao);
+
+    private Task Continuar() => Avancar(Passo.Continuar);
+
+    private async Task Avancar(Passo passo)
     {
-        sessao?.ProximaLinha();
-        await AtualizarDepuracao();
+        if (sessao is null) return;
+
+        switch (passo)
+        {
+            case Passo.Continuar: sessao.Continuar(); break;
+            case Passo.ProximaLinha: sessao.ProximaLinha(); break;
+            case Passo.ProximaInstrucao: sessao.ProximaInstrucaoPasso(); break;
+        }
+
+        if (sessao.AguardandoEntrada)
+        {
+            // Para antes do leia() e pede o valor; o passo é retomado em EnviarEntrada.
+            passoPendente = passo;
+            textoDigitado = string.Empty;
+            focarCampoDigitado = true;
+            AtualizarEstado();
+            linhaSelecionada = sessao.LinhaAtual;
+            await JS.InvokeVoidAsync("nportugol.destacarLinha", IdEditor, sessao.LinhaAtual ?? 0);
+            return;
+        }
+
+        if (passoAPasso)
+        {
+            await AtualizarDepuracao();
+        }
+        else
+        {
+            AtualizarEstado();
+            await JS.InvokeVoidAsync("nportugol.destacarLinha", IdEditor, 0);
+        }
     }
 
-    private async Task ProximaInstrucao()
+    private async Task EnviarEntrada()
     {
-        sessao?.ProximaInstrucaoPasso();
-        await AtualizarDepuracao();
+        if (sessao is null || passoPendente is not Passo passo) return;
+
+        sessao.Fornecer(textoDigitado);
+        passoPendente = null;
+        await Avancar(passo);
     }
 
-    private async Task Continuar()
+    private async Task CancelarEntrada()
     {
-        sessao?.Continuar();
-        await AtualizarDepuracao();
+        passoPendente = null;
+        await Parar();
+    }
+
+    private async Task TeclaNoCampo(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await EnviarEntrada();
+        else if (e.Key == "Escape") await CancelarEntrada();
     }
 
     private async Task Parar()
@@ -589,6 +745,7 @@
         }
         else
         {
+            painelInferior = PainelInferior.Saida; // terminou: mostra o resultado
             await SairDoModoDepuracao();
         }
     }
@@ -613,6 +770,7 @@
     private void LimparExecucao()
     {
         sessao = null;
+        passoPendente = null;
         saida = string.Empty;
         erroExecucao = null;
         variaveis = Array.Empty<Variavel>();
@@ -623,6 +781,28 @@
     #endregion
 
     #region ligação entre código, árvore, assembly e problemas
+
+    private void AbrirArvore()
+    {
+        if (validos?.Ast is null) return;
+
+        arvore = LayoutDaArvore.Calcular(validos.Ast);
+        arvoreAberta = true;
+        abaEditor = AbaEditor.Arvore;
+    }
+
+    private async Task FecharArvore()
+    {
+        arvoreAberta = false;
+        arvore = null;
+        abaEditor = AbaEditor.Codigo;
+
+        if (noSelecionado is not null)
+        {
+            noSelecionado = null;
+            await JS.InvokeVoidAsync("nportugol.destacarTrecho", IdEditor, 0, 0, 0, 0);
+        }
+    }
 
     private async Task SelecionarNo(NoDesenhado no)
     {
@@ -635,8 +815,16 @@
         }
     }
 
+    /// <summary>Duplo clique num nó: volta para o código, com o trecho do nó selecionado.</summary>
+    private async Task AbrirNoNoCodigo(NoDesenhado no)
+    {
+        await SelecionarNo(no);
+        if (no.Trecho is { } t) await IrPara(t.Linha1, t.Coluna1);
+    }
+
     private async Task SelecionarLinha(int linha)
     {
+        abaEditor = AbaEditor.Codigo;
         linhaSelecionada = linha;
         await JS.InvokeVoidAsync("nportugol.destacarTrecho", IdEditor, linha, 1, linha, 0);
     }
@@ -649,7 +837,17 @@
         if (!Depurando) linhaSelecionada = e.Position.LineNumber;
     }
 
-    private async Task IrPara(int linha, int coluna) => await JS.InvokeVoidAsync("raiox.irPara", IdEditor, linha, coluna);
+    private async Task IrPara(int linha, int coluna)
+    {
+        if (abaEditor != AbaEditor.Codigo)
+        {
+            abaEditor = AbaEditor.Codigo;
+            StateHasChanged();
+            await Task.Delay(50); // o Monaco precisa voltar a ter tamanho para rolar até a linha
+        }
+
+        await JS.InvokeVoidAsync("raiox.irPara", IdEditor, linha, coluna);
+    }
 
     private async Task IrParaProblema(Problema p)
     {
@@ -661,18 +859,67 @@
     private async Task CarregarExemplo(Exemplo exemplo)
     {
         exemploSelecionado = exemplo.Id;
-        nomeDoArquivo = exemplo.Id + ".np";
-        entrada = exemplo.Entrada;
+        nomeDoArquivo = exemplo.Id;
+        // A caixa Entrada começa vazia: cada leia() abre a janela para o usuário digitar.
+        entrada = string.Empty;
         LimparExecucao();
 
-        await editor.SetValue(exemplo.Codigo);
+        // Os exemplos são em NPortugol; o assembly guardado é descartado, pois era de outro programa.
+        codigoGuardado.Remove(Linguagem.Assembly);
+        await TrocarLinguagem(Linguagem.NPortugol, exemplo.Codigo);
         await JS.InvokeVoidAsync("nportugol.definirFragmento", string.Empty);
+    }
+
+    #region linguagem do editor
+
+    private async Task MudarLinguagem(Linguagem nova)
+    {
+        if (nova == linguagem || Depurando) return;
+
+        // Na primeira vez que abre o assembly, o editor começa com o assembly gerado pelo programa.
+        var texto = codigoGuardado.GetValueOrDefault(nova);
+        if (string.IsNullOrWhiteSpace(texto) && nova == Linguagem.Assembly)
+            texto = AssemblyGerado() ?? AssemblyInicial;
+
+        await TrocarLinguagem(nova, texto ?? string.Empty);
+    }
+
+    /// <summary>Copia o assembly gerado pelo programa NPortugol para o editor de assembly.</summary>
+    private async Task EditarAssembly()
+    {
+        if (AssemblyGerado() is not { } asm || Depurando) return;
+
+        await TrocarLinguagem(Linguagem.Assembly, asm);
+    }
+
+    private string? AssemblyGerado() =>
+        linguagem == Linguagem.NPortugol && validos?.Bytecode is { } b ? string.Join("\n", b.Script) + "\n" : null;
+
+    private async Task TrocarLinguagem(Linguagem nova, string texto)
+    {
+        if (nova != linguagem)
+        {
+            codigoGuardado[linguagem] = await editor.GetValue();
+            linguagem = nova;
+
+            // A compilação, a árvore e a execução eram do código da outra linguagem.
+            validos = null;
+            funcoes = Array.Empty<FuncaoDoPrograma>();
+            LimparExecucao();
+            await FecharArvore();
+
+            await JS.InvokeVoidAsync("raiox.definirLinguagem", IdEditor, IdDaLinguagem(nova));
+        }
+
+        await editor.SetValue(texto);
         await Recompilar();
     }
 
+    #endregion
+
     private async Task Compartilhar()
     {
-        var fragmento = LinkCompartilhavel.Codificar(await editor.GetValue(), entrada);
+        var fragmento = LinkCompartilhavel.Codificar(await editor.GetValue(), entrada, linguagem == Linguagem.Assembly);
         var endereco = new Uri(Navegacao.Uri).GetLeftPart(UriPartial.Query) + "#" + fragmento;
 
         await JS.InvokeVoidAsync("nportugol.definirFragmento", fragmento);

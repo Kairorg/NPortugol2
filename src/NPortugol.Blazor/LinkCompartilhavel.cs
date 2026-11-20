@@ -7,11 +7,18 @@ namespace NPortugol.Blazor;
 /// Codifica o programa (e a entrada) no fragmento da URL (#c=...), comprimido com Deflate
 /// e em Base64 URL-safe. O fragmento nunca é enviado ao servidor.
 /// </summary>
+/// <remarks>
+/// Um programa em assembly da VM usa o prefixo <c>#a=</c>; só o Raio-X o entende, e as sobrecargas
+/// sem o parâmetro <c>assembly</c> o ignoram.
+/// </remarks>
 public static class LinkCompartilhavel
 {
     private const string Prefixo = "c=";
+    private const string PrefixoAssembly = "a=";
 
-    public static string Codificar(string codigo, string entrada)
+    public static string Codificar(string codigo, string entrada) => Codificar(codigo, entrada, assembly: false);
+
+    public static string Codificar(string codigo, string entrada, bool assembly)
     {
         var texto = entrada.Length == 0 ? codigo : codigo + "\0" + entrada;
 
@@ -22,18 +29,23 @@ public static class LinkCompartilhavel
             deflate.Write(bytes, 0, bytes.Length);
         }
 
-        return Prefixo + Convert.ToBase64String(memoria.ToArray())
+        return (assembly ? PrefixoAssembly : Prefixo) + Convert.ToBase64String(memoria.ToArray())
             .TrimEnd('=').Replace('+', '-').Replace('/', '_');
     }
 
-    public static bool TentarDecodificar(string? fragmento, out string codigo, out string entrada)
+    public static bool TentarDecodificar(string? fragmento, out string codigo, out string entrada) =>
+        TentarDecodificar(fragmento, out codigo, out entrada, out var assembly) && !assembly;
+
+    public static bool TentarDecodificar(string? fragmento, out string codigo, out string entrada, out bool assembly)
     {
         codigo = entrada = string.Empty;
+        assembly = false;
 
         if (string.IsNullOrEmpty(fragmento)) return false;
 
         fragmento = fragmento.TrimStart('#');
-        if (!fragmento.StartsWith(Prefixo, StringComparison.Ordinal)) return false;
+        assembly = fragmento.StartsWith(PrefixoAssembly, StringComparison.Ordinal);
+        if (!assembly && !fragmento.StartsWith(Prefixo, StringComparison.Ordinal)) return false;
 
         try
         {

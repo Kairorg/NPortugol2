@@ -485,6 +485,144 @@ code {
     font-weight: 700;
 }
 
+/* ---- Estado da VM (aba Depuração do painel inferior) ------------------- */
+
+.estado-vm {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    min-height: 0;
+    overflow: auto;
+}
+
+.coluna-estado {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    border-right: 1px solid var(--borda);
+}
+
+.coluna-estado:last-child {
+    border-right: none;
+}
+
+.coluna-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+.coluna-conteudo {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding-bottom: 6px;
+}
+
+.coluna-conteudo .vazio {
+    padding: 0 12px;
+}
+
+.estado-vm .tabela-estado .grupo td {
+    padding-left: 12px;
+}
+
+.estado-vm .tabela-estado .nome {
+    padding-left: 20px;
+}
+
+.estado-vm .lista-pilha {
+    padding-left: 32px;
+}
+
+.ponto-ativo {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--status-depurando);
+}
+
+.painel-direito {
+    overflow: hidden;
+}
+
+/* ---- Janela do leia() ---------------------------------------------------- */
+
+.modal-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.modal {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: min(460px, 100%);
+    padding: 20px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    background: var(--fundo-painel);
+    color: var(--texto);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.modal-titulo {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.modal-texto {
+    margin: 0;
+    color: var(--texto-suave);
+    font-size: 13px;
+}
+
+.modal-saida {
+    margin: 0;
+    padding: 8px 10px;
+    max-height: 120px;
+    overflow: auto;
+    border-radius: 5px;
+    background: var(--fundo-campo);
+    font-family: var(--mono);
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+
+.campo-leia {
+    padding: 8px 10px;
+    border: 1px solid var(--borda);
+    border-radius: 5px;
+    background: var(--fundo-campo);
+    color: var(--texto);
+    font-family: var(--mono);
+    font-size: 14px;
+}
+
+.campo-leia:focus {
+    outline: 2px solid var(--destaque);
+    outline-offset: -1px;
+}
+
+.modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 /* ---- Divisórias --------------------------------------------------------- */
 
 .divisor {
@@ -526,6 +664,10 @@ body.redimensionando-y, body.redimensionando-y * {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
+    /* Ao arrastar uma divisória, o Monaco só se redimensiona no quadro seguinte; sem isto ele
+       desenha por cima do painel vizinho. */
+    overflow: hidden;
     background: var(--fundo-editor);
 }
 
@@ -541,9 +683,45 @@ body.redimensionando-y, body.redimensionando-y * {
     align-items: center;
     gap: 6px;
     padding: 0 14px;
+    border: none;
+    border-right: 1px solid var(--borda);
+    background: none;
+    font: inherit;
     font-size: 13px;
     color: var(--texto-suave);
-    border-right: 1px solid var(--borda);
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.aba-editor:hover {
+    color: var(--texto);
+}
+
+/* Aba com botão de fechar: o rótulo é o botão que ativa a aba. */
+div.aba-editor {
+    padding-right: 6px;
+    cursor: default;
+}
+
+.aba-editor-rotulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.acoes-editor {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+    padding: 0 8px;
 }
 
 .aba-editor.ativa {
@@ -551,6 +729,44 @@ body.redimensionando-y, body.redimensionando-y * {
     color: var(--texto);
     box-shadow: inset 0 2px 0 var(--destaque);
     margin-bottom: -1px;
+}
+
+/* Seletor NPortugol / Assembly, à direita das abas do editor. */
+.seletor-linguagem {
+    display: inline-flex;
+    align-self: center;
+    padding: 2px;
+    border: 1px solid var(--borda);
+    border-radius: 6px;
+    background: var(--fundo-campo);
+}
+
+.opcao-linguagem {
+    height: 22px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 4px;
+    background: none;
+    color: var(--texto-suave);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.opcao-linguagem:hover:not(:disabled) {
+    color: var(--texto);
+}
+
+.opcao-linguagem.ativa {
+    background: var(--destaque);
+    color: #fff;
+}
+
+.opcao-linguagem:disabled {
+    cursor: default;
+}
+
+.opcao-linguagem:disabled:not(.ativa) {
+    opacity: 0.5;
 }
 
 .selo {
@@ -564,6 +780,34 @@ body.redimensionando-y, body.redimensionando-y * {
 .editor-area {
     flex: 1;
     min-height: 0;
+    overflow: hidden;
+}
+
+.editor-area.oculta {
+    display: none;
+}
+
+.arvore-aba {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.dica-arvore {
+    color: var(--texto-suave);
+}
+
+.titulo-painel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    color: var(--texto);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .editor {
@@ -612,6 +856,64 @@ body.redimensionando-y, body.redimensionando-y * {
 .aba-painel.ativa {
     color: var(--texto);
     border-bottom-color: var(--destaque);
+}
+
+.abas-grupo {
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    min-width: 0;
+}
+
+.fechar-aba {
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: none;
+    color: var(--texto-suave);
+    cursor: pointer;
+}
+
+.fechar-aba:hover {
+    background: var(--hover);
+    color: var(--texto);
+}
+
+.acoes-painel {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+.acao-painel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 10px;
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    background: var(--fundo-campo);
+    color: var(--texto);
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.acao-painel:hover:not(:disabled) {
+    background: var(--hover);
+}
+
+.acao-painel:disabled {
+    opacity: 0.5;
+    cursor: default;
 }
 
 .painel-conteudo {
@@ -733,7 +1035,9 @@ body.redimensionando-y, body.redimensionando-y * {
 }
 
 .ferramenta:focus-visible, .atividade:focus-visible, .item:focus-visible, .aba-painel:focus-visible,
-.secao-cabecalho:focus-visible, .problema:focus-visible, .botao-icone:focus-visible, .entrada:focus-visible {
+.secao-cabecalho:focus-visible, .problema:focus-visible, .botao-icone:focus-visible, .entrada:focus-visible,
+.fechar-aba:focus-visible, .acao-painel:focus-visible, .opcao-linguagem:focus-visible,
+.aba-editor:focus-visible, .aba-editor-rotulo:focus-visible {
     outline: 2px solid var(--destaque);
     outline-offset: -2px;
 }

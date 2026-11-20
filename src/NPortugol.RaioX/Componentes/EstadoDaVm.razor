@@ -1,66 +1,80 @@
 @using NPortugol.RaioX.Depuracao
 
-@* Estado da VM na vista Execução da barra lateral. *@
-<SecaoLateral Titulo="Variáveis" Contador="@Variaveis.Count">
-    @if (Variaveis.Count == 0)
-    {
-        <p class="vazio">@(Ativa ? "Nenhuma variável ainda." : "Inicie a depuração (F5).")</p>
-    }
-    else
-    {
-        <table class="tabela-estado">
-            <tbody>
-                @foreach (var grupo in Variaveis.GroupBy(v => v.Funcao))
-                {
-                    <tr class="grupo"><td colspan="2">@grupo.Key</td></tr>
-                    @foreach (var v in grupo)
-                    {
-                        <tr>
-                            <td class="nome">@v.Nome</td>
-                            <td class="valor">@v.Valor</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    }
-</SecaoLateral>
-
-<SecaoLateral Titulo="Pilha de chamadas" Contador="@PilhaDeChamadas.Count">
-    @if (PilhaDeChamadas.Count == 0)
-    {
-        <p class="vazio">Vazia.</p>
-    }
-    else
-    {
-        <ol class="lista-pilha">
-            @for (var i = 0; i < PilhaDeChamadas.Count; i++)
+@* Estado da VM na aba Depuração do painel inferior: uma coluna para cada parte, lado a lado. *@
+<div class="estado-vm">
+    <section class="coluna-estado" aria-label="Variáveis">
+        <header class="coluna-cabecalho">
+            <span>Variáveis</span>
+            <span class="contador">@Variaveis.Count</span>
+        </header>
+        <div class="coluna-conteudo">
+            @if (Variaveis.Count == 0)
             {
-                <li class="@(i == 0 ? "topo" : "")">@PilhaDeChamadas[i]</li>
+                <p class="vazio">@(Ativa ? "Nenhuma variável ainda." : "Inicie a depuração (F5).")</p>
             }
-        </ol>
-    }
-</SecaoLateral>
-
-<SecaoLateral Titulo="Pilha de avaliação" Contador="@PilhaDeAvaliacao.Count">
-    @if (PilhaDeAvaliacao.Count == 0)
-    {
-        <p class="vazio">Vazia.</p>
-    }
-    else
-    {
-        <ol class="lista-pilha">
-            @for (var i = 0; i < PilhaDeAvaliacao.Count; i++)
+            else
             {
-                <li class="@(i == 0 ? "topo" : "")">@PilhaDeAvaliacao[i]</li>
+                <table class="tabela-estado">
+                    <tbody>
+                        @foreach (var grupo in Variaveis.GroupBy(v => v.Funcao))
+                        {
+                            <tr class="grupo"><td colspan="2">@grupo.Key</td></tr>
+                            @foreach (var v in grupo)
+                            {
+                                <tr>
+                                    <td class="nome">@v.Nome</td>
+                                    <td class="valor">@v.Valor</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
             }
-        </ol>
-    }
-</SecaoLateral>
+        </div>
+    </section>
+
+    <section class="coluna-estado" aria-label="Pilha de chamadas">
+        <header class="coluna-cabecalho">
+            <span>Pilha de chamadas</span>
+            <span class="contador">@PilhaDeChamadas.Count</span>
+        </header>
+        <div class="coluna-conteudo">
+            @Pilha(PilhaDeChamadas)
+        </div>
+    </section>
+
+    <section class="coluna-estado" aria-label="Pilha de avaliação">
+        <header class="coluna-cabecalho">
+            <span>Pilha de avaliação</span>
+            <span class="contador">@PilhaDeAvaliacao.Count</span>
+        </header>
+        <div class="coluna-conteudo">
+            @Pilha(PilhaDeAvaliacao)
+        </div>
+    </section>
+</div>
 
 @code {
     [Parameter] public bool Ativa { get; set; }
     [Parameter] public IReadOnlyList<Variavel> Variaveis { get; set; } = Array.Empty<Variavel>();
     [Parameter] public IReadOnlyList<string> PilhaDeAvaliacao { get; set; } = Array.Empty<string>();
     [Parameter] public IReadOnlyList<string> PilhaDeChamadas { get; set; } = Array.Empty<string>();
+
+    // Lista com o topo primeiro.
+    private static RenderFragment Pilha(IReadOnlyList<string> itens) => __builder =>
+    {
+        if (itens.Count == 0)
+        {
+            <p class="vazio">Vazia.</p>
+        }
+        else
+        {
+            <ol class="lista-pilha">
+                @for (var i = 0; i < itens.Count; i++)
+                {
+                    <li class="@(i == 0 ? "topo" : "")">@itens[i]</li>
+                }
+            </ol>
+        }
+    };
 }

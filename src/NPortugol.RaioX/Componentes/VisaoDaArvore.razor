@@ -1,7 +1,7 @@
 @using System.Globalization
 @using NPortugol.RaioX.Analise
 
-@* Desenha a AST em SVG. Clicar num nó destaca o trecho do código correspondente. *@
+@* Desenha a AST em SVG. Clicar num nó destaca o trecho do código; o duplo clique leva até ele. *@
 <div class="arvore">
     <div class="painel-ferramentas">
         <button class="botao-icone" @onclick="() => AlterarZoom(-0.15)" title="Diminuir zoom" aria-label="Diminuir zoom">−</button>
@@ -13,6 +13,7 @@
             <span class="amostra literal"></span>valor
             <span class="amostra operador"></span>operador
         </span>
+        <span class="dica-arvore">Duplo clique num nó leva ao código</span>
     </div>
 
     <div class="arvore-area">
@@ -30,7 +31,8 @@
                 }
                 @foreach (var no in Arvore.Nos)
                 {
-                    <g class="no @no.Classe @(no.Id == Selecionado ? "selecionado" : "")" @onclick="() => AoSelecionar.InvokeAsync(no)">
+                    <g class="no @no.Classe @(no.Id == Selecionado ? "selecionado" : "")" @onclick="() => AoSelecionar.InvokeAsync(no)"
+                       @ondblclick="() => AoAbrir.InvokeAsync(no)">
                         <title>@no.Descricao</title>
                         <rect x="@F(no.X - no.Largura / 2)" y="@F(no.Y)" width="@F(no.Largura)" height="@F(LayoutDaArvore.AlturaNo)" rx="6" />
                         <text x="@F(no.X)" y="@F(no.Y + 18.5)" text-anchor="middle">@no.Texto</text>
@@ -45,6 +47,7 @@
     [Parameter] public ArvoreDesenhada? Arvore { get; set; }
     [Parameter] public int? Selecionado { get; set; }
     [Parameter] public EventCallback<NoDesenhado> AoSelecionar { get; set; }
+    [Parameter] public EventCallback<NoDesenhado> AoAbrir { get; set; }
 
     private double Zoom { get; set; } = 1;
 

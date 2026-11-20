@@ -1,20 +1,20 @@
-@using NPortugol.Runtime
+@using NPortugol.RaioX.Analise
 
-@* Lista o assembly gerado, com a linha do script de cada instrução. *@
-<div class="assembly" role="list" aria-label="Assembly gerado">
+@* Lista o assembly carregado na VM, com a linha do editor de cada instrução. *@
+<div class="assembly" role="list" aria-label="Assembly">
     @if (Linhas is not null && Mapa is not null)
     {
         for (var i = 0; i < Linhas.Count; i++)
         {
             var indice = i;
             var texto = Linhas[i];
-            var linhaFonte = Mapa.LineOf(i);
+            var linhaFonte = Mapa.LinhaDe(i);
 
             <div role="listitem" id="asm-@i" class="asm-linha @Classes(indice, texto, linhaFonte)"
                  @onclick="() => Clicar(linhaFonte)">
                 <span class="asm-indice">@i</span>
                 <span class="asm-texto">@texto</span>
-                <span class="asm-fonte" title="@(linhaFonte is null ? "" : $"Gerada pela linha {linhaFonte} do script")">
+                <span class="asm-fonte" title="@(linhaFonte is null ? "" : $"Linha {linhaFonte} do editor")">
                     @(linhaFonte is null ? "" : $"L{linhaFonte}")
                 </span>
             </div>
@@ -24,7 +24,7 @@
 
 @code {
     [Parameter] public IList<string>? Linhas { get; set; }
-    [Parameter] public SourceLineMap? Mapa { get; set; }
+    [Parameter] public MapaDeLinhas? Mapa { get; set; }
     [Parameter] public int? Atual { get; set; }
     [Parameter] public int? LinhaSelecionada { get; set; }
     [Parameter] public EventCallback<int> AoClicarLinha { get; set; }

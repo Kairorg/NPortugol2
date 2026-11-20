@@ -1,5 +1,6 @@
 using System.Collections;
 using NPortugol.Blazor;
+using NPortugol.RaioX.Analise;
 using NPortugol.Runtime;
 
 namespace NPortugol.RaioX.Depuracao;
@@ -12,8 +13,11 @@ public sealed record Variavel(string Funcao, string Nome, string Valor);
 /// <remarks>
 /// Usa o modo de depuração da VM (<c>Motor.Debug</c>) sem carregar o SourceMap no contexto: assim
 /// cada <c>Executar()</c> roda uma única instrução e devolve o controle. O passo por linha repete
-/// isso até a próxima instrução pertencer a outra linha do script, segundo o
-/// <see cref="SourceLineMap"/>. Como cada chamada é curta, a página não trava.
+/// isso até a próxima instrução pertencer a outra linha do editor, segundo o
+/// <see cref="MapaDeLinhas"/>. Como cada chamada é curta, a página não trava.
+///
+/// Antes de um <c>leia()</c> sem linha de entrada disponível, a sessão para em
+/// <see cref="AguardandoEntrada"/> até a página entregar o valor com <see cref="Fornecer"/>.
 /// </remarks>
 public sealed class SessaoDeDepuracao
 {
@@ -21,11 +25,11 @@ public sealed class SessaoDeDepuracao
     public const long LimiteDeInstrucoes = 2_000_000;
 
     private readonly Motor motor;
-    private readonly SourceLineMap mapa;
+    private readonly MapaDeLinhas mapa;
     private readonly ModuloEntradaSaida entradaSaida;
     private bool iniciada;
 
-    public SessaoDeDepuracao(Bytecode bytecode, SourceLineMap mapa, string? entrada)
+    public SessaoDeDepuracao(Bytecode bytecode, MapaDeLinhas mapa, string? entrada)
     {
         this.mapa = mapa;
         entradaSaida = new ModuloEntradaSaida(entrada);
@@ -38,6 +42,16 @@ public sealed class SessaoDeDepuracao
     private RuntimeContext Contexto => (RuntimeContext)motor.RuntimeContext;
 
     public bool Concluida => Erro is not null || (iniciada && Contexto.Completed);
+
+    /// <summary>A próxima instrução chama <c>leia()</c> e não há linha de entrada para ela.</summary>
+    public bool AguardandoEntrada =>
+        entradaSaida.LinhasPendentes == 0
+        && ProximaInstrucao is int i
+        && Contexto.Runnable.Instructions[i] is { OpCode: OpCode.CALL } chamada
+        && chamada.Operands[0].Value as string == "leia";
+
+    /// <summary>Entrega a linha digitada pelo usuário para o <c>leia()</c> que está esperando.</summary>
+    public void Fornecer(string linha) => entradaSaida.Fornecer(linha);
 
     public string? Erro { get; private set; }
 
@@ -58,12 +72,12 @@ public sealed class SessaoDeDepuracao
         }
     }
 
-    /// <summary>Linha do script da próxima instrução (a linha destacada no editor).</summary>
-    public int? LinhaAtual => ProximaInstrucao is int i ? mapa.LineOf(i) : null;
+    /// <summary>Linha do editor da próxima instrução (a linha destacada).</summary>
+    public int? LinhaAtual => ProximaInstrucao is int i ? mapa.LinhaDe(i) : null;
 
     public void ProximaInstrucaoPasso()
     {
-        if (Concluida) return;
+        if (Concluida || AguardandoEntrada) return;
 
         try
         {
@@ -90,15 +104,16 @@ public sealed class SessaoDeDepuracao
         {
             ProximaInstrucaoPasso();
         }
-        while (!Concluida && (LinhaAtual is null || (LinhaAtual == linhaInicial && NivelDeChamadas() == nivelInicial)));
+        while (!Concluida && !AguardandoEntrada
+               && (LinhaAtual is null || (LinhaAtual == linhaInicial && NivelDeChamadas() == nivelInicial)));
     }
 
     private int NivelDeChamadas() => iniciada ? Contexto.Runnable.RuntimeStack.OfType<FunctionCall>().Count() : 0;
 
-    /// <summary>Executa até o fim (ou até o limite de instruções).</summary>
+    /// <summary>Executa até o fim, até o limite de instruções ou até um <c>leia()</c> sem entrada.</summary>
     public void Continuar()
     {
-        while (!Concluida)
+        while (!Concluida && !AguardandoEntrada)
             ProximaInstrucaoPasso();
     }
 
