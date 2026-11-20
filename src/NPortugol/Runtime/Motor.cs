@@ -36,6 +36,9 @@ namespace NPortugol.Runtime
 
         public bool EnableGC { get; set; }
 
+        /// <summary>Limite de instruções por programa carregado (0 = sem limite).</summary>
+        public long MaxInstructions { get; set; }
+
         public IRuntimeContext RuntimeContext { get; set; }
 
         public IHospedagem Hospedagem 
@@ -59,8 +62,9 @@ namespace NPortugol.Runtime
 
             RuntimeContext = new RuntimeContext(runnable)
                                  {
-                                     Hospedagem = Hospedagem, 
-                                     EnableGC = EnableGC
+                                     Hospedagem = Hospedagem,
+                                     EnableGC = EnableGC,
+                                     MaxInstructions = MaxInstructions
                                  };
         }
 

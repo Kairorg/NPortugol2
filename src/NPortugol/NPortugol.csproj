@@ -1,7 +1,8 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="OutDir">
 
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <!-- net48 para as ferramentas Windows; netstandard2.0 para .NET moderno e o playground web. -->
+    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
     <RootNamespace>NPortugol</RootNamespace>
     <AssemblyName>NPortugol</AssemblyName>
     <LangVersion>7.3</LangVersion>
@@ -12,6 +13,16 @@
     <!-- Código gerado pelo ANTLR (src/NPortugol/Generated) usa atributos CLSCompliant. -->
     <NoWarn>$(NoWarn);CS3021</NoWarn>
   </PropertyGroup>
+
+  <!-- O build.config grava todos os projetos em build\; sem isto as duas NPortugol.dll se sobrescreveriam. -->
+  <PropertyGroup Condition="'$(OutDir)' != '' and '$(TargetFramework)' == 'netstandard2.0'">
+    <OutDir>$(OutDir)netstandard2.0\</OutDir>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <!-- Prova de conceito com DynamicMethod (Reflection.Emit), indisponível no netstandard2.0. -->
+    <Compile Remove="ILTranslator.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <!-- 4.13.1 é a versão mais recente do runtime C# no NuGet; é compatível com o código

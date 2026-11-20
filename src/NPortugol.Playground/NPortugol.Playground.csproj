@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <!-- Por padrão o Blazor só carrega os dados de globalização do idioma do navegador;
+         o playground precisa de pt-BR em qualquer navegador (ver Program.cs). -->
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- A VM acessa propriedades por reflexão (ex.: v.tamanho, data.numerodia); o trimming
+         da publicação não deve remover nada do NPortugol. -->
+    <TrimmerRootAssembly Include="NPortugol" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Exemplos\*.np" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorMonaco" Version="3.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.15" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NPortugol\NPortugol.csproj" />
+  </ItemGroup>
+
+</Project>

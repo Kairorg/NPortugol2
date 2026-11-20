@@ -1,0 +1,10 @@
+função principal()
+  variável numero, i
+
+  numero = 7
+
+  para i = 1 até 11
+    imprima(numero, " x ", i, " = ", numero * i)
+    imprimaLinha("")
+  fim
+fim

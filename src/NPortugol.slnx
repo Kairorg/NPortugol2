@@ -25,6 +25,7 @@
     <Project Path="TurboNPortugol/TurboNPortugol.csproj" />
   </Folder>
   <Folder Name="/Web/">
+    <Project Path="NPortugol.Playground/NPortugol.Playground.csproj" />
     <Project Path="NPortugol.Web/NPortugol.Web.2010.csproj" />
   </Folder>
   <Project Path="NPortugol/NPortugol.csproj" />

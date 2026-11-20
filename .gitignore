@@ -16,3 +16,4 @@ _ReSharper.*/
 *.xml
 pkg/
 .antlr/
+.vs/

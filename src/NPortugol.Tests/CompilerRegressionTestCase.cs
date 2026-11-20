@@ -162,5 +162,29 @@ namespace NPortugol.Tests
         }
 
         #endregion
+
+        #region limite de instruções
+
+        [Test]
+        public void Laco_Infinito_Para_No_Limite_De_Instrucoes()
+        {
+            var motor = new NPortugol.Runtime.Motor { MaxInstructions = 1000 };
+            motor.Compilar("função principal()\n  enquanto 1 < 2\n  fim\nfim");
+
+            var e = Assert.Throws<NPortugol.Runtime.Exceptions.RuntimeException>(() => motor.Executar());
+
+            StringAssert.Contains("limite de 1000 instruções", e.Message);
+        }
+
+        [Test]
+        public void Sem_Limite_Programa_Termina_Normalmente()
+        {
+            var motor = new NPortugol.Runtime.Motor();
+            motor.Compilar("função principal()\n  variável i\n  para i = 0 até 5000\n  fim\nfim");
+
+            Assert.DoesNotThrow(() => motor.Executar());
+        }
+
+        #endregion
     }
 }

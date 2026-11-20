@@ -1,0 +1,7 @@
+função principal()
+  variável nome
+
+  nome = "mundo"
+
+  imprima("Olá, ", nome, "!")
+fim

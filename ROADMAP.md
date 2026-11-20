@@ -27,6 +27,14 @@ A migração para ANTLR 4 foi concluída e trouxe junto a modernização mínima
   NUnit 3 (`dotnet test`) e ILMerge 3.0.41. Há duas soluções com o mesmo conteúdo:
   `NPortugol.slnx` (VS 2026) e `NPortugol.sln` (formato do VS 2022). Quando o VS 2022 deixar de
   ser usado, o `.sln` pode ser removido.
+- A biblioteca também compila para `netstandard2.0`, e os testes rodam em `net48` e `net10.0`
+  (parte da Fase 2).
+- Primeira versão do **playground web** (`src/NPortugol.Playground`, parte da Fase 5). O
+  compilador e a VM rodam no navegador via Blazor WebAssembly. Há editor Monaco com realce e
+  autocompletar, erro de compilação marcado na linha, campo de entrada para `leia()`, limite
+  de instruções contra laços infinitos, exemplos prontos e link compartilhável. O download
+  inicial é de cerca de 3,7 MB comprimidos. Ainda não foi publicado: o pacote
+  `NPortugol-Playground-*.zip` gerado pelo build está pronto para qualquer hospedagem estática.
 
 ## Fase 1: limpeza e automação do build
 
@@ -52,13 +60,12 @@ na integração contínua.
 Objetivo: usar o NPortugol a partir de .NET 8+ (Windows, Linux e macOS), não só do .NET
 Framework.
 
-- Fazer `NPortugol.csproj` compilar para `netstandard2.0` e `net48`. Pontos de atenção:
-  - `ILTranslator` usa `DynamicMethod` (pacote `System.Reflection.Emit.Lightweight` no
-    netstandard2.0, ou mover o tradutor para um projeto separado);
-  - `BytecodeSerializer` usa `BinaryFormatter`, que está obsoleto, é inseguro e foi removido
-    do .NET 9. Trocar por um formato próprio (o bytecode já é texto: basta gravar as linhas,
-    as funções e o source map).
-- Rodar os testes em `net48` e `net8.0`.
+- ~~Fazer `NPortugol.csproj` compilar para `netstandard2.0` e `net48`~~ e ~~rodar os testes nos
+  dois runtimes~~: feito (`net48` e `net10.0`). O `ILTranslator` ficou só no `net48`. Falta:
+  - `BytecodeSerializer` usa `BinaryFormatter`, que está obsoleto, é inseguro e lança exceção
+    no .NET 9+ (portanto não funciona na versão `netstandard2.0` rodando em .NET moderno nem no
+    navegador). Trocar por um formato próprio: o bytecode já é texto, basta gravar as linhas,
+    as funções e o source map.
 - Publicar o pacote NuGet `NPortugol` (README, ícone e licença no pacote).
 - Corrigir a dependência de cultura: hoje números decimais são gerados e lidos com
   `float.Parse` da cultura atual. O assembly usa vírgula (`PUSH 2,5`), que só funciona em
@@ -129,6 +136,8 @@ Limitações conhecidas que hoje geram erro de compilação ou comportamento ine
   Exige precedência própria na gramática: hoje todos os operadores lógicos e de comparação
   têm a mesma precedência.
 - Menos unário (`x = -1` é erro de sintaxe).
+- Concatenação de texto: `"Olá, " + nome` compila mas falha na execução, porque o `+` da VM
+  (`SADD`) só soma números. Hoje a saída é montada passando vários valores ao `imprima`.
 - Chamada de método de objeto hospedado (`p.calcular(1)`) empilha os argumentos mas não emite
   a chamada (`Emissor.EmitMethodCall` está vazio).
 - `para i = 0 até 2` executa com i = 0 e 1 (o limite é exclusivo). Decidir se é a semântica
@@ -151,16 +160,26 @@ diagnósticos por compilação, para sublinhar erros enquanto se digita).
 1. **Serviço de linguagem (`NPortugol.LanguageService`).** Uma biblioteca com diagnósticos,
    autocompletar (palavras-chave, variáveis e funções do script, funções dos módulos
    instalados), símbolos e "ir para definição". É a base dos itens seguintes.
-2. **Playground web**, substituto do TurboNPortugol. Blazor WebAssembly executa o compilador
-   e a VM em C# dentro do navegador, sem servidor. O editor é o Monaco (o do VS Code), via
-   `BlazorMonaco`, com realce, autocompletar e erros vindos do serviço de linguagem.
-   - Hospedagem estática gratuita (GitHub Pages, junto do site do projeto).
-   - Funciona em Windows, Linux, Chromebook e tablet. Com PWA, também offline.
-   - Exemplos prontos (os de `TurboNPortugol/Exemplos`) e compartilhamento de programas por
-     link.
-   - Funções de entrada e saída (`imprima`, `leia`) como módulo próprio do playground.
-   - Atenção: o primeiro carregamento baixa o runtime .NET (alguns MB, depois fica em
-     cache), e não há `Reflection.Emit` no navegador (afeta só o `ILTranslator`).
+2. **Playground web**, substituto do TurboNPortugol. **Primeira versão feita**
+   (`src/NPortugol.Playground`). Blazor WebAssembly executa o compilador e a VM em C# dentro do
+   navegador, sem servidor. Já tem:
+   - editor Monaco (via `BlazorMonaco`) com realce, indentação automática e autocompletar de
+     palavras-chave, blocos e funções embutidas;
+   - erro de compilação marcado na linha e coluna;
+   - campo Entrada para o `leia()` e limite de instruções contra laços infinitos;
+   - os exemplos do TurboNPortugol e dois novos;
+   - link compartilhável com o programa no endereço;
+   - tema claro e escuro e layout para celular.
+
+   Próximos passos:
+   - publicar no GitHub Pages, com um workflow que rode `dotnet publish`, ajuste o
+     `<base href>` para o subcaminho do repositório e adicione o `.nojekyll`;
+   - modo PWA, para funcionar offline;
+   - erros de execução com a linha do script (depende da Fase 3, item 7);
+   - trocar o autocompletar em JavaScript pelo serviço de linguagem (item 1), incluindo
+     variáveis e funções do próprio script;
+   - executar fora da thread da interface, para que um programa longo não congele a página
+     enquanto roda (hoje o limite de instruções garante só que ele termina).
 3. **Modo avançado no playground**, substituto do GrammarIDE: visualização da AST (desenhada
    no navegador, sem depender do Graphviz) e execução passo a passo mostrando o assembly, a
    pilha e as variáveis. Para depurar as gramáticas, usar a extensão ANTLR4 do VS Code, que já

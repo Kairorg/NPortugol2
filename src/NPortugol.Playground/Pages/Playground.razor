@@ -1,0 +1,192 @@
+@page "/"
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+@using NPortugol.Playground.Runtime
+@inject IJSRuntime JS
+@inject NavigationManager Navegacao
+
+<PageTitle>NPortugol Playground</PageTitle>
+
+<div class="playground">
+    <header class="barra">
+        <div class="marca">
+            <span class="logo">NPortugol</span>
+            <span class="sub">playground</span>
+        </div>
+
+        <div class="acoes">
+            <select class="exemplos" aria-label="Carregar um exemplo" @onchange="CarregarExemplo" value="@exemploSelecionado">
+                <option value="">Exemplos…</option>
+                @foreach (var exemplo in Exemplos.Todos)
+                {
+                    <option value="@exemplo.Id">@exemplo.Titulo</option>
+                }
+            </select>
+            <button class="botao secundario" @onclick="Compartilhar" disabled="@(!pronto)">@textoCompartilhar</button>
+            <button class="botao primario" @onclick="Executar" disabled="@(!pronto || executando)" title="Executar (Ctrl+Enter)">
+                ▶ Executar
+            </button>
+        </div>
+    </header>
+
+    <main class="area">
+        <section class="editor-area" aria-label="Código do programa">
+            <StandaloneCodeEditor @ref="editor" Id="editor" CssClass="editor"
+                                  ConstructionOptions="OpcoesDoEditor" OnDidInit="EditorIniciado" />
+        </section>
+
+        <aside class="painel">
+            <div class="bloco">
+                <label class="titulo" for="entrada">
+                    <span>Entrada</span>
+                    <small>uma linha para cada leia()</small>
+                </label>
+                <textarea id="entrada" class="entrada" rows="3" spellcheck="false" @bind="entrada"></textarea>
+            </div>
+
+            <div class="bloco saida-bloco">
+                <div class="titulo">
+                    <span>Saída</span>
+                    <span class="status @classeStatus" aria-live="polite">@status</span>
+                </div>
+                <div class="saida">
+                    @if (saida.Length > 0)
+                    {
+                        <pre>@saida</pre>
+                    }
+                    @if (erro is not null)
+                    {
+                        <pre class="erro">@erro</pre>
+                    }
+                    @if (saida.Length == 0 && erro is null)
+                    {
+                        <p class="vazio">Clique em Executar ou tecle Ctrl+Enter.</p>
+                    }
+                </div>
+            </div>
+        </aside>
+    </main>
+</div>
+
+@code {
+    private const string IdEditor = "editor";
+
+    private StandaloneCodeEditor editor = null!;
+    private string codigoInicial = string.Empty;
+    private string entrada = string.Empty;
+    private string saida = string.Empty;
+    private string? erro;
+    private string status = "Pronto";
+    private string classeStatus = string.Empty;
+    private string exemploSelecionado = string.Empty;
+    private string textoCompartilhar = "Compartilhar";
+    private bool pronto;
+    private bool executando;
+
+    protected override void OnInitialized()
+    {
+        var fragmento = new Uri(Navegacao.Uri).Fragment;
+
+        if (LinkCompartilhavel.TentarDecodificar(fragmento, out var codigo, out var entradaDoLink))
+        {
+            codigoInicial = codigo;
+            entrada = entradaDoLink;
+            return;
+        }
+
+        var primeiro = Exemplos.Todos[0];
+        codigoInicial = primeiro.Codigo;
+        entrada = primeiro.Entrada;
+        exemploSelecionado = primeiro.Id;
+    }
+
+    private StandaloneEditorConstructionOptions OpcoesDoEditor(StandaloneCodeEditor _) => new()
+    {
+        AutomaticLayout = true,
+        Language = "nportugol",
+        Value = codigoInicial,
+        FontSize = 15,
+        TabSize = 2,
+        Minimap = new EditorMinimapOptions { Enabled = false },
+        ScrollBeyondLastLine = false,
+        FixedOverflowWidgets = true,
+    };
+
+    private async Task EditorIniciado()
+    {
+        await JS.InvokeVoidAsync("nportugol.conectar", IdEditor);
+        await editor.AddCommand((int)KeyMod.CtrlCmd | (int)KeyCode.Enter, _ => InvokeAsync(Executar));
+
+        pronto = true;
+        StateHasChanged();
+    }
+
+    private async Task Executar()
+    {
+        if (executando) return;
+
+        executando = true;
+        saida = string.Empty;
+        erro = null;
+        status = "Executando…";
+        classeStatus = string.Empty;
+        StateHasChanged();
+
+        // Deixa o navegador desenhar o estado "Executando…" antes do trabalho síncrono.
+        await Task.Delay(1);
+
+        var codigo = await editor.GetValue();
+        await JS.InvokeVoidAsync("nportugol.limparErros", IdEditor);
+
+        var resultado = ExecutorPlayground.Executar(codigo, entrada);
+
+        saida = resultado.Saida;
+        erro = resultado.Erro;
+
+        if (resultado.ErroDeCompilacao is { Linha: > 0 } e)
+            await JS.InvokeVoidAsync("nportugol.marcarErro", IdEditor, e.Linha, e.Coluna, e.Comprimento, e.Mensagem);
+
+        (status, classeStatus) = resultado switch
+        {
+            { Sucesso: true } => ($"Concluído em {resultado.Duracao.TotalMilliseconds:0} ms", "ok"),
+            { ErroDeCompilacao: not null } => ("Erro de compilação", "falha"),
+            _ => ("Erro de execução", "falha"),
+        };
+
+        executando = false;
+        StateHasChanged();
+    }
+
+    private async Task CarregarExemplo(ChangeEventArgs args)
+    {
+        var exemplo = Exemplos.Todos.FirstOrDefault(e => e.Id == args.Value?.ToString());
+        if (exemplo is null) return;
+
+        exemploSelecionado = exemplo.Id;
+        entrada = exemplo.Entrada;
+        saida = string.Empty;
+        erro = null;
+        status = "Pronto";
+        classeStatus = string.Empty;
+
+        await editor.SetValue(exemplo.Codigo);
+        await JS.InvokeVoidAsync("nportugol.limparErros", IdEditor);
+        await JS.InvokeVoidAsync("nportugol.definirFragmento", string.Empty);
+    }
+
+    private async Task Compartilhar()
+    {
+        var fragmento = LinkCompartilhavel.Codificar(await editor.GetValue(), entrada);
+        var endereco = new Uri(Navegacao.Uri).GetLeftPart(UriPartial.Query) + "#" + fragmento;
+
+        await JS.InvokeVoidAsync("nportugol.definirFragmento", fragmento);
+        var copiado = await JS.InvokeAsync<bool>("nportugol.copiar", endereco);
+
+        textoCompartilhar = copiado ? "Link copiado!" : "Link na barra de endereço";
+        StateHasChanged();
+
+        await Task.Delay(2500);
+        textoCompartilhar = "Compartilhar";
+        StateHasChanged();
+    }
+}

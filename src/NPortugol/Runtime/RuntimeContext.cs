@@ -37,6 +37,15 @@ namespace NPortugol.Runtime
 
         public bool EnableGC { get; set; }
 
+        /// <summary>
+        /// Número máximo de instruções executadas desde a criação do contexto (0 = sem limite).
+        /// Protege hosts que não podem interromper a execução, como o navegador.
+        /// </summary>
+        public long MaxInstructions { get; set; }
+
+        /// <summary>Instruções executadas desde a criação do contexto.</summary>
+        public long ExecutedInstructions { get; private set; }
+
         public Instruction CurrentInst { get; private set; }
 
         public FunctionCall CurrentFunction { get; set; }
@@ -173,6 +182,13 @@ namespace NPortugol.Runtime
 
         private void ExecuteInstruction()
         {
+            ExecutedInstructions++;
+
+            if (MaxInstructions > 0 && ExecutedInstructions > MaxInstructions)
+                throw new RuntimeException(string.Format(
+                    "Execução interrompida: limite de {0} instruções atingido. Verifique se há um laço infinito.",
+                    MaxInstructions));
+
             if (CurrentFunction == null)
                 CurrentFunction = Runnable.RuntimeStack.Peek() as FunctionCall;
             
