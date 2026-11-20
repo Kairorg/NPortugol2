@@ -224,6 +224,13 @@ code {
 
 .barra-titulo-direita {
     justify-self: end;
+    display: flex;
+    gap: 4px;
+}
+
+a.ferramenta {
+    color: inherit;
+    text-decoration: none;
 }
 
 .ferramenta {

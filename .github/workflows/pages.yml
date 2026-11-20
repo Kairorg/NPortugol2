@@ -64,6 +64,12 @@ jobs:
           # Endereços desconhecidos voltam para o Raio-X.
           cp "$site/index.html" "$site/404.html"
 
+      # O vídeo (video/, Remotion) fica num release, não no git, e é servido em video.html.
+      - name: Baixar o vídeo do release "video"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download video -R "${{ github.repository }}" -p "como-funciona-uma-linguagem.mp4" -D publicado/wwwroot/video
+
       - uses: actions/upload-pages-artifact@v4
         with:
           path: publicado/wwwroot

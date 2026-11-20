@@ -1,0 +1,414 @@
+[
+ {
+  "i": 0,
+  "file": "passo-000.png",
+  "depurando": true,
+  "atual": "2 PUSH 3 L2",
+  "painel": "VARIÁVEIS 0 Nenhuma variável ainda. PILHA DE CHAMADAS 1 principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 1,
+  "file": "passo-001.png",
+  "depurando": true,
+  "atual": "3 CALL fatorial L2",
+  "painel": "VARIÁVEIS 0 Nenhuma variável ainda. PILHA DE CHAMADAS 1 principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 2,
+  "file": "passo-002.png",
+  "depurando": true,
+  "atual": "6 fatorial:",
+  "painel": "VARIÁVEIS 0 Nenhuma variável ainda. PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 3,
+  "file": "passo-003.png",
+  "depurando": true,
+  "atual": "7 DCL x",
+  "painel": "VARIÁVEIS 0 Nenhuma variável ainda. PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 4,
+  "file": "passo-004.png",
+  "depurando": true,
+  "atual": "8 POP x",
+  "painel": "VARIÁVEIS 1 fatorial #1 x nulo PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 5,
+  "file": "passo-005.png",
+  "depurando": true,
+  "atual": "9 EMP",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 6,
+  "file": "passo-006.png",
+  "depurando": true,
+  "atual": "10 PUSH x L6",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 7,
+  "file": "passo-007.png",
+  "depurando": true,
+  "atual": "11 PUSH 0 L6",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 8,
+  "file": "passo-008.png",
+  "depurando": true,
+  "atual": "12 JNE label_0 L6",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 0 3"
+ },
+ {
+  "i": 9,
+  "file": "passo-009.png",
+  "depurando": true,
+  "atual": "15 .label_0",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 10,
+  "file": "passo-010.png",
+  "depurando": true,
+  "atual": "16 PUSH x L7",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 11,
+  "file": "passo-011.png",
+  "depurando": true,
+  "atual": "17 PUSH 1 L7",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 3"
+ },
+ {
+  "i": 12,
+  "file": "passo-012.png",
+  "depurando": true,
+  "atual": "18 SSUB L7",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 1 3"
+ },
+ {
+  "i": 13,
+  "file": "passo-013.png",
+  "depurando": true,
+  "atual": "19 CALL fatorial L7",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 14,
+  "file": "passo-014.png",
+  "depurando": true,
+  "atual": "6 fatorial:",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 15,
+  "file": "passo-015.png",
+  "depurando": true,
+  "atual": "7 DCL x",
+  "painel": "VARIÁVEIS 1 fatorial #1 x 3 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 16,
+  "file": "passo-016.png",
+  "depurando": true,
+  "atual": "8 POP x",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x nulo PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 17,
+  "file": "passo-017.png",
+  "depurando": true,
+  "atual": "9 EMP",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 18,
+  "file": "passo-018.png",
+  "depurando": true,
+  "atual": "10 PUSH x L6",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 19,
+  "file": "passo-019.png",
+  "depurando": true,
+  "atual": "11 PUSH 0 L6",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 20,
+  "file": "passo-020.png",
+  "depurando": true,
+  "atual": "12 JNE label_0 L6",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 0 2"
+ },
+ {
+  "i": 21,
+  "file": "passo-021.png",
+  "depurando": true,
+  "atual": "15 .label_0",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 22,
+  "file": "passo-022.png",
+  "depurando": true,
+  "atual": "16 PUSH x L7",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 23,
+  "file": "passo-023.png",
+  "depurando": true,
+  "atual": "17 PUSH 1 L7",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 24,
+  "file": "passo-024.png",
+  "depurando": true,
+  "atual": "18 SSUB L7",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 1 2"
+ },
+ {
+  "i": 25,
+  "file": "passo-025.png",
+  "depurando": true,
+  "atual": "19 CALL fatorial L7",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 26,
+  "file": "passo-026.png",
+  "depurando": true,
+  "atual": "6 fatorial:",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 27,
+  "file": "passo-027.png",
+  "depurando": true,
+  "atual": "7 DCL x",
+  "painel": "VARIÁVEIS 2 fatorial #1 x 3 fatorial #2 x 2 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 28,
+  "file": "passo-028.png",
+  "depurando": true,
+  "atual": "8 POP x",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x nulo PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 29,
+  "file": "passo-029.png",
+  "depurando": true,
+  "atual": "9 EMP",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 30,
+  "file": "passo-030.png",
+  "depurando": true,
+  "atual": "10 PUSH x L6",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 31,
+  "file": "passo-031.png",
+  "depurando": true,
+  "atual": "11 PUSH 0 L6",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 32,
+  "file": "passo-032.png",
+  "depurando": true,
+  "atual": "12 JNE label_0 L6",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 0 1"
+ },
+ {
+  "i": 33,
+  "file": "passo-033.png",
+  "depurando": true,
+  "atual": "15 .label_0",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 34,
+  "file": "passo-034.png",
+  "depurando": true,
+  "atual": "16 PUSH x L7",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 35,
+  "file": "passo-035.png",
+  "depurando": true,
+  "atual": "17 PUSH 1 L7",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 36,
+  "file": "passo-036.png",
+  "depurando": true,
+  "atual": "18 SSUB L7",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 1 1"
+ },
+ {
+  "i": 37,
+  "file": "passo-037.png",
+  "depurando": true,
+  "atual": "19 CALL fatorial L7",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 0"
+ },
+ {
+  "i": 38,
+  "file": "passo-038.png",
+  "depurando": true,
+  "atual": "6 fatorial:",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 0"
+ },
+ {
+  "i": 39,
+  "file": "passo-039.png",
+  "depurando": true,
+  "atual": "7 DCL x",
+  "painel": "VARIÁVEIS 3 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 0"
+ },
+ {
+  "i": 40,
+  "file": "passo-040.png",
+  "depurando": true,
+  "atual": "8 POP x",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x nulo PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 0"
+ },
+ {
+  "i": 41,
+  "file": "passo-041.png",
+  "depurando": true,
+  "atual": "9 EMP",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 42,
+  "file": "passo-042.png",
+  "depurando": true,
+  "atual": "10 PUSH x L6",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 43,
+  "file": "passo-043.png",
+  "depurando": true,
+  "atual": "11 PUSH 0 L6",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 0"
+ },
+ {
+  "i": 44,
+  "file": "passo-044.png",
+  "depurando": true,
+  "atual": "12 JNE label_0 L6",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 0 0"
+ },
+ {
+  "i": 45,
+  "file": "passo-045.png",
+  "depurando": true,
+  "atual": "13 PUSH 1 L6",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 0 Vazia."
+ },
+ {
+  "i": 46,
+  "file": "passo-046.png",
+  "depurando": true,
+  "atual": "14 RET L6",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 5 fatorial #4 (volta para a instrução 20) fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 47,
+  "file": "passo-047.png",
+  "depurando": true,
+  "atual": "20 PUSH x L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 48,
+  "file": "passo-048.png",
+  "depurando": true,
+  "atual": "21 SMUL L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 1 1"
+ },
+ {
+  "i": 49,
+  "file": "passo-049.png",
+  "depurando": true,
+  "atual": "22 RET L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 4 fatorial #3 (volta para a instrução 20) fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 50,
+  "file": "passo-050.png",
+  "depurando": true,
+  "atual": "20 PUSH x L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 1"
+ },
+ {
+  "i": 51,
+  "file": "passo-051.png",
+  "depurando": true,
+  "atual": "21 SMUL L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 2 1"
+ },
+ {
+  "i": 52,
+  "file": "passo-052.png",
+  "depurando": true,
+  "atual": "22 RET L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 3 fatorial #2 (volta para a instrução 20) fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 53,
+  "file": "passo-053.png",
+  "depurando": true,
+  "atual": "20 PUSH x L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 2"
+ },
+ {
+  "i": 54,
+  "file": "passo-054.png",
+  "depurando": true,
+  "atual": "21 SMUL L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 2 3 2"
+ },
+ {
+  "i": 55,
+  "file": "passo-055.png",
+  "depurando": true,
+  "atual": "22 RET L7",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 2 fatorial #1 (volta para a instrução 4) principal PILHA DE AVALIAÇÃO 1 6"
+ },
+ {
+  "i": 56,
+  "file": "passo-056.png",
+  "depurando": true,
+  "atual": "4 CALL imprima L2",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 1 principal PILHA DE AVALIAÇÃO 1 6"
+ },
+ {
+  "i": 57,
+  "file": "passo-057.png",
+  "depurando": true,
+  "atual": "5 RET L2",
+  "painel": "VARIÁVEIS 4 fatorial #1 x 3 fatorial #2 x 2 fatorial #3 x 1 fatorial #4 x 0 PILHA DE CHAMADAS 1 principal PILHA DE AVALIAÇÃO 1 nulo"
+ },
+ {
+  "i": 58,
+  "file": "passo-058.png",
+  "depurando": false,
+  "painel": "6"
+ }
+]

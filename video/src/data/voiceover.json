@@ -1,0 +1,256 @@
+{
+  "abertura": {
+    "arquivo": "voiceover/abertura.mp3",
+    "duracao": 20.619,
+    "texto": "Você escreve algumas linhas de texto, aperta executar, e o computador faz exatamente o que você pediu. {pergunta}Mas o que acontece no meio do caminho? {raiox}Neste vídeo, vamos abrir o capô de uma linguagem de verdade, o NPortugol, usando o Raio-X, e seguir um programa desde o texto até a máquina virtual que o executa.",
+    "cues": {
+      "pergunta": 6.757,
+      "raiox": 9.485
+    }
+  },
+  "linguagem": {
+    "arquivo": "voiceover/linguagem.mp3",
+    "duracao": 22.523,
+    "texto": "Uma linguagem de programação é um conjunto de regras. {sintaxe}A sintaxe diz como escrever: função, fim, se, retorne. {semantica}A semântica diz o que cada construção significa. {programa}Nosso exemplo é um fatorial recursivo: a função principal imprime o fatorial de três, {recursao}e fatorial chama a si mesma até chegar em zero.",
+    "cues": {
+      "sintaxe": 3.971,
+      "semantica": 9.532,
+      "programa": 13.119,
+      "recursao": 19.168
+    }
+  },
+  "pipeline": {
+    "arquivo": "voiceover/pipeline.mp3",
+    "duracao": 22.524,
+    "texto": "Para o computador, esse texto é só uma sequência de caracteres. {compilador}O compilador o transforma em etapas: {lexico}análise léxica, {sintatico}análise sintática, {ast}uma árvore abstrata, {gerador}e a geração de código, que produz um assembly para uma máquina imaginária. {vm}Depois, a máquina virtual executa esse assembly, instrução por instrução.",
+    "cues": {
+      "compilador": 4.493,
+      "lexico": 7.535,
+      "sintatico": 8.975,
+      "ast": 10.646,
+      "gerador": 12.237,
+      "vm": 17.508
+    }
+  },
+  "lexico": {
+    "arquivo": "voiceover/lexico.mp3",
+    "duracao": 26.936,
+    "texto": "A primeira etapa é o analisador léxico. Ele lê os caracteres e os agrupa em tokens, as palavras da linguagem. {tokens}Na linha retorne fatorial de x menos um, vezes x, ele encontra uma palavra-chave, identificadores, símbolos, operadores e um número. {regras}Essas regras estão na gramática do NPortugol, escrita para o ANTLR. Espaços e comentários são descartados aqui mesmo.",
+    "cues": {
+      "tokens": 7.686,
+      "regras": 17.775
+    }
+  },
+  "sintatico": {
+    "arquivo": "voiceover/sintatico.mp3",
+    "duracao": 28.978,
+    "texto": "Em seguida, o analisador sintático verifica se os tokens seguem a gramática. {gramatica}Uma função é a palavra função, um nome, os parâmetros, os comandos, e fim. {arvore}O resultado é uma árvore, e no Raio-X podemos vê-la: cada função vira um nó FUNC, com seu nome e sua lista de comandos. {precedencia}Repare que a árvore já resolve a precedência: a multiplicação fica acima da chamada de fatorial, e a subtração fica dentro do argumento.",
+    "cues": {
+      "gramatica": 5.12,
+      "arvore": 10.855,
+      "precedencia": 19.516
+    }
+  },
+  "geracao": {
+    "arquivo": "voiceover/geracao.mp3",
+    "duracao": 34.458,
+    "texto": "Agora o gerador de código percorre a árvore e emite instruções. {pilha}A máquina virtual do NPortugol é uma máquina de pilha: em vez de registradores, os valores são empilhados, e as operações consomem o topo. {expr}Então, x menos um vira: empilhe x, empilhe um, subtraia. {se}E o se x igual a zero vira uma comparação seguida de um desvio, J N E, que pula o retorne um quando x não é zero. {mapa}No Raio-X, cada instrução mostra de qual linha do código ela veio.",
+    "cues": {
+      "pilha": 4.598,
+      "expr": 14.838,
+      "se": 20.898,
+      "mapa": 29.895
+    }
+  },
+  "anatomia": {
+    "arquivo": "voiceover/anatomia.mp3",
+    "duracao": 23.081,
+    "texto": "Vamos à máquina virtual. Ela tem poucas peças. {instrucoes}Uma lista de instruções. {ip}Um ponteiro de instrução, o I P, que indica a próxima a executar. {avaliacao}Uma pilha de avaliação, para os valores intermediários. {chamadas}Uma pilha de chamadas, que lembra para onde voltar quando uma função termina. {simbolos}E uma tabela de símbolos, com as variáveis de cada chamada.",
+    "cues": {
+      "instrucoes": 3.355,
+      "ip": 5.619,
+      "avaliacao": 10.704,
+      "chamadas": 14.547,
+      "simbolos": 19.296
+    }
+  },
+  "laco": {
+    "arquivo": "voiceover/laco.mp3",
+    "duracao": 43.282,
+    "texto": "O coração de toda máquina virtual é um laço. Este é o do NPortugol, em C#, na classe RuntimeContext. {while}Enquanto o programa não terminou, execute uma instrução. {busca}Executar uma instrução começa pela busca: pegar a instrução na posição do I P. {avanca}Logo em seguida, o I P avança. Assim, se a instrução não mexer nele, a próxima será a seguinte. {executa}Por fim, o executor decodifica e executa a instrução. {limite}No navegador há um detalhe: não dá para interromper um laço infinito, então a máquina conta as instruções e para ao atingir um limite. {ciclo}Busca, decodifica, executa. Milhões de vezes.",
+    "cues": {
+      "while": 8.684,
+      "busca": 12.783,
+      "avanca": 18.703,
+      "executa": 25.902,
+      "limite": 30.081,
+      "ciclo": 39.021
+    }
+  },
+  "despacho": {
+    "arquivo": "voiceover/despacho.mp3",
+    "duracao": 24.938,
+    "texto": "A decodificação é um switch sobre o código da operação. {casos}Cada opcode tem o seu método: {memoria}MOV e D C L mexem na memória, {aritmetica}as operações aritméticas fazem contas, {desvios}JMP e J N E desviam, {pilha}PUSH e POP usam a pilha, {fluxo}e CALL e RET controlam as funções. {exemplo}Quando a instrução é S SUB, o switch despacha para ProcessArithmetic.",
+    "cues": {
+      "casos": 3.576,
+      "memoria": 5.793,
+      "aritmetica": 9.265,
+      "desvios": 11.865,
+      "pilha": 14.884,
+      "fluxo": 17.078,
+      "exemplo": 20.039
+    }
+  },
+  "pilha": {
+    "arquivo": "voiceover/pilha.mp3",
+    "duracao": 25.589,
+    "texto": "Vejamos esses métodos por dentro. {push}PUSH cria um operando. Se ele for uma variável, busca o seu valor na tabela de símbolos, e empilha. {aritmetica}As operações de pilha desempilham dois valores, primeiro o da direita, depois o da esquerda, calculam, e empilham o resultado. {exemplo}Com x igual a três: empilha três, {um}empilha um, {ssub}e S SUB tira os dois e devolve dois.",
+    "cues": {
+      "push": 2.508,
+      "aritmetica": 9.694,
+      "exemplo": 18.971,
+      "um": 21.63,
+      "ssub": 22.64
+    }
+  },
+  "desvio": {
+    "arquivo": "voiceover/desvio.mp3",
+    "duracao": 19.83,
+    "texto": "Desvios são ainda mais simples. {jne}J N E desempilha os dois valores comparados. {ip}Se forem diferentes, basta escrever um novo endereço no I P. {salto}Na próxima volta do laço, a busca já lê a instrução do rótulo. {conclusao}É assim que nascem o se, o enquanto e o para: só comparações e saltos.",
+    "cues": {
+      "jne": 2.589,
+      "ip": 6.281,
+      "salto": 10.646,
+      "conclusao": 14.629
+    }
+  },
+  "chamadas": {
+    "arquivo": "voiceover/chamadas.mp3",
+    "duracao": 27.91,
+    "texto": "E as funções? {call}CALL guarda na pilha de chamadas o endereço da instrução seguinte, o endereço de retorno, {entrada}e põe no I P o ponto de entrada da função. {hospedeiro}Se o nome for uma função do hospedeiro, como imprima, a máquina chama código C# diretamente. {ret}RET faz o caminho inverso: tira a função da pilha, recupera o endereço de retorno e volta para ele. {fim}Quando a pilha esvazia, o programa terminou.",
+    "cues": {
+      "call": 1.265,
+      "entrada": 7.129,
+      "hospedeiro": 10.948,
+      "ret": 17.786,
+      "fim": 25.066
+    }
+  },
+  "simulacao": {
+    "arquivo": "voiceover/simulacao.mp3",
+    "duracao": 30.79,
+    "texto": "Agora vamos juntar tudo e rodar o fatorial de três. {inicio}O I P começa em main. PUSH três, CALL fatorial, e a pilha de chamadas cresce. {recursao}Cada chamada recursiva cria um novo x: três, dois, um, zero. {base}Quando x é zero, o J N E não salta, e a função retorna um. {volta}Agora as chamadas se desfazem: um vezes um, vezes dois, vezes três. {final}O resultado, seis, chega a imprima. Foram sessenta instruções.",
+    "cues": {
+      "inicio": 3.495,
+      "recursao": 9.938,
+      "base": 15.441,
+      "volta": 20.654,
+      "final": 25.855
+    }
+  },
+  "raiox": {
+    "arquivo": "voiceover/raiox.mp3",
+    "duracao": 22.848,
+    "texto": "Tudo isso você pode ver no Raio-X, o depurador web do NPortugol. {f11}Com F11, a máquina executa uma única instrução por vez, e o assembly destaca a instrução atual. {paineis}O painel de depuração mostra as variáveis, a pilha de chamadas e a pilha de avaliação, exatamente como na nossa animação. {saida}No final, a saída: seis.",
+    "cues": {
+      "f11": 5.027,
+      "paineis": 12.295,
+      "saida": 20.526
+    }
+  },
+  "encerramento": {
+    "arquivo": "voiceover/encerramento.mp3",
+    "duracao": 20.062,
+    "texto": "Recapitulando: uma linguagem define regras; {compilador}o compilador transforma o texto em tokens, árvore e instruções; {vm}e a máquina virtual executa essas instruções num laço de busca, decodificação e execução. {convite}Abra o Raio-X, escreva o seu próprio programa, e veja cada passo por dentro.",
+    "cues": {
+      "compilador": 3.332,
+      "vm": 7.732,
+      "convite": 14.687
+    }
+  },
+  "leigo-abertura": {
+    "arquivo": "voiceover/leigo-abertura.mp3",
+    "duracao": 18.994,
+    "texto": "Todo aplicativo que você usa, do jogo no celular ao banco na internet, começou do mesmo jeito: alguém escreveu um texto. {pergunta}Mas como um texto vira algo que o computador faz? {tema}É isso que vamos descobrir, de um jeito simples, com a ajuda do NPortugol, uma linguagem de programação em português.",
+    "cues": {
+      "pergunta": 8.359,
+      "tema": 11.703
+    }
+  },
+  "leigo-receita": {
+    "arquivo": "voiceover/leigo-receita.mp3",
+    "duracao": 20.898,
+    "texto": "Um programa é parecido com uma receita de bolo. {passos}É uma lista de passos, um depois do outro. {exato}A diferença é que o computador não tem bom senso. {literal}Se a receita disser bata os ovos, e não disser quando parar, ele bate para sempre. {conclusao}Por isso, cada passo precisa ser exato, sem nada que possa ser entendido de dois jeitos.",
+    "cues": {
+      "passos": 3.146,
+      "exato": 6.351,
+      "literal": 9.648,
+      "conclusao": 15.255
+    }
+  },
+  "leigo-linguagem": {
+    "arquivo": "voiceover/leigo-linguagem.mp3",
+    "duracao": 19.737,
+    "texto": "É para isso que existem as linguagens de programação. {idioma}Elas são como um idioma, só que com regras rígidas: um meio-termo entre o jeito que nós falamos e o que a máquina consegue seguir. {portugues}No NPortugol, as palavras são em português. {ola}Este programa manda o computador escrever na tela: Olá, mundo!",
+    "cues": {
+      "idioma": 3.262,
+      "portugues": 11.784,
+      "ola": 15.255
+    }
+  },
+  "leigo-ingredientes": {
+    "arquivo": "voiceover/leigo-ingredientes.mp3",
+    "duracao": 24.056,
+    "texto": "Quase todo programa é feito com quatro ingredientes. {variavel}Variáveis, que são como caixinhas com etiqueta, onde guardamos valores. {decisao}Decisões: se acontecer isto, faça aquilo. {repeticao}Repetições: faça isto várias vezes, como escrever a tabuada do sete. {funcao}E funções, que são receitas dentro da receita, com um nome, para usar sempre que precisar.",
+    "cues": {
+      "variavel": 3.611,
+      "decisao": 9.033,
+      "repeticao": 12.968,
+      "funcao": 18.343
+    }
+  },
+  "leigo-tradutor": {
+    "arquivo": "voiceover/leigo-tradutor.mp3",
+    "duracao": 26.424,
+    "texto": "Só que o computador não entende português. Ele entende apenas passos minúsculos e muito simples. {tradutor}Então, antes de rodar, um programa chamado compilador funciona como um tradutor. {palavras}Primeiro, ele separa o texto em palavras. {gramatica}Depois, confere a gramática, como um corretor ortográfico. Se faltar um parêntese, ele avisa onde está o erro. {passinhos}Por fim, reescreve tudo como uma lista de passos bem pequenos.",
+    "cues": {
+      "tradutor": 6.502,
+      "palavras": 12.237,
+      "gramatica": 15.07,
+      "passinhos": 22.372
+    }
+  },
+  "leigo-maquina": {
+    "arquivo": "voiceover/leigo-maquina.mp3",
+    "duracao": 20.48,
+    "texto": "Quem segue esses passos é a máquina virtual. {cozinheiro}Pense num cozinheiro muito rápido e muito obediente. {dedo}Ele mantém o dedo no passo atual, {anota}anota resultados num bloquinho, {proximo}e vai para o próximo. {rapido}Ele não pensa nem improvisa, mas faz isso milhões de vezes por segundo, e é dessa repetição que surge tudo o que um programa faz.",
+    "cues": {
+      "cozinheiro": 3.077,
+      "dedo": 6.385,
+      "anota": 8.696,
+      "proximo": 10.728,
+      "rapido": 12.341
+    }
+  },
+  "leigo-raiox": {
+    "arquivo": "voiceover/leigo-raiox.mp3",
+    "duracao": 16.208,
+    "texto": "No Raio-X do NPortugol, você vê tudo isso acontecendo. {codigo}De um lado, o seu programa. {passos}Do outro, os passos que o tradutor criou. {depurar}E você pode executar um passo de cada vez, vendo as caixinhas mudarem de valor, até o resultado aparecer na tela.",
+    "cues": {
+      "codigo": 4.307,
+      "passos": 6.246,
+      "depurar": 9.125
+    }
+  },
+  "leigo-encerramento": {
+    "arquivo": "voiceover/leigo-encerramento.mp3",
+    "duracao": 17.09,
+    "texto": "Resumindo: {receita}um programa é uma receita exata, {traducao}o tradutor transforma o texto em passos simples, {execucao}e a máquina segue esses passos, um por um, muito rápido. {convite}Errar faz parte. Abra o Raio-X, escreva o seu primeiro programa e veja o que acontece.",
+    "cues": {
+      "receita": 1.068,
+      "traducao": 3.379,
+      "execucao": 6.42,
+      "convite": 10.809
+    }
+  }
+}

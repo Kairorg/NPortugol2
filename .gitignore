@@ -17,3 +17,6 @@ _ReSharper.*/
 pkg/
 .antlr/
 .vs/
+
+# Segredos locais (chave da ElevenLabs etc.)
+.env

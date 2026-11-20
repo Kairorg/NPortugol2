@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Por dentro de uma linguagem · NPortugol</title>
+    <meta name="description" content="Vídeo: como funcionam uma linguagem de programação, um compilador e uma máquina virtual, seguindo um programa NPortugol no Raio-X." />
+    <link rel="icon" type="image/png" href="icon-192.png" />
+    <style>
+        :root {
+            --fundo: #0d1016;
+            --painel: #181c26;
+            --borda: #2a3040;
+            --texto: #e8ebf2;
+            --suave: #8d96ab;
+            --azul: #6d8cff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--fundo);
+            color: var(--texto);
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.5;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 16px 64px;
+        }
+
+        .marca {
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--azul);
+        }
+
+        h1 {
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.1;
+            margin: 8px 0 12px;
+        }
+
+        p { color: var(--suave); max-width: 760px; }
+
+        video {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            margin: 28px 0 20px;
+            border: 1px solid var(--borda);
+            border-radius: 12px;
+            background: #000;
+        }
+
+        .acoes { display: flex; flex-wrap: wrap; gap: 12px; }
+
+        .acoes a {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--borda);
+            background: var(--painel);
+            color: var(--texto);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .acoes a.principal { background: var(--azul); border-color: var(--azul); color: #0b0d12; }
+
+        ol { color: var(--suave); padding-left: 20px; columns: 2 280px; margin-top: 32px; }
+    </style>
+</head>
+
+<body>
+    <main>
+        <div class="marca">NPortugol · Raio-X</div>
+        <h1>Por dentro de uma linguagem de programação</h1>
+        <p>
+            Siga um programa NPortugol desde o texto até a máquina virtual: análise léxica, árvore
+            sintática, geração de assembly e o laço de busca, decodificação e execução da VM, com o
+            código C# real do interpretador.
+        </p>
+
+        <video controls preload="metadata" poster="video/capa.jpg">
+            <source src="video/como-funciona-uma-linguagem.mp4" type="video/mp4" />
+            Seu navegador não reproduz vídeos.
+            <a href="video/como-funciona-uma-linguagem.mp4">Baixe o vídeo</a>.
+        </video>
+
+        <div class="acoes">
+            <a class="principal" href="./">Abrir o Raio-X</a>
+            <a href="video/como-funciona-uma-linguagem.mp4" download>Baixar o vídeo (MP4)</a>
+        </div>
+
+        <ol>
+            <li>A linguagem: sintaxe e semântica</li>
+            <li>Do texto à execução</li>
+            <li>Análise léxica</li>
+            <li>Análise sintática e a árvore</li>
+            <li>Geração de código</li>
+            <li>As peças da máquina virtual</li>
+            <li>O laço da VM</li>
+            <li>O switch por opcode</li>
+            <li>PUSH e as operações de pilha</li>
+            <li>Desvios</li>
+            <li>CALL e RET</li>
+            <li>Executando fatorial(3)</li>
+            <li>Depurando no Raio-X</li>
+        </ol>
+    </main>
+</body>
+
+</html>
