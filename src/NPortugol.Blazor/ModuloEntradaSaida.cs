@@ -2,19 +2,19 @@ using System.Text;
 using NPortugol.Runtime.Exceptions;
 using NPortugol.Runtime.Interop;
 
-namespace NPortugol.Playground.Runtime;
+namespace NPortugol.Blazor;
 
 /// <summary>
-/// Funções de entrada e saída do playground, com os mesmos nomes do ConsoleModulo do Npc.
+/// Funções de entrada e saída dos sites, com os mesmos nomes do ConsoleModulo do Npc.
 /// A saída vai para um buffer e o <c>leia()</c> consome as linhas do campo "Entrada",
 /// porque o navegador não pode bloquear esperando o teclado.
 /// </summary>
-public sealed class ModuloPlayground : IModulo
+public sealed class ModuloEntradaSaida : IModulo
 {
     private readonly StringBuilder saida = new();
     private readonly Queue<string> entrada;
 
-    public ModuloPlayground(string? entrada)
+    public ModuloEntradaSaida(string? entrada)
     {
         var linhas = (entrada ?? string.Empty).Replace("\r\n", "\n").Split('\n');
 

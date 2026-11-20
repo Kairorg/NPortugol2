@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace NPortugol.Playground.Runtime;
+namespace NPortugol.Blazor;
 
 public sealed record Exemplo(string Id, string Titulo, string Codigo, string Entrada);
 
@@ -30,7 +30,7 @@ public static class Exemplos
 
     private static string Ler(Assembly assembly, string id)
     {
-        using var stream = assembly.GetManifestResourceStream($"NPortugol.Playground.Exemplos.{id}.np")
+        using var stream = assembly.GetManifestResourceStream($"NPortugol.Blazor.Exemplos.{id}.np")
                            ?? throw new InvalidOperationException($"Exemplo '{id}' não encontrado.");
         using var reader = new StreamReader(stream);
 

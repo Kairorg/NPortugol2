@@ -96,6 +96,17 @@ window.nportugol = (function () {
         return holder ? holder.editor : null;
     }
 
+    // Coleções de decorações por editor e por finalidade ("linha" da depuração, "trecho" da AST).
+    const decoracoes = {};
+
+    function decorar(id, finalidade, lista) {
+        const e = editor(id);
+        if (!e) return;
+        const chave = id + ":" + finalidade;
+        if (!decoracoes[chave]) decoracoes[chave] = e.createDecorationsCollection();
+        decoracoes[chave].set(lista);
+    }
+
     const temaEscuro = window.matchMedia("(prefers-color-scheme: dark)");
 
     function aplicarTema() {
@@ -126,6 +137,42 @@ window.nportugol = (function () {
         limparErros: function (id) {
             const e = editor(id);
             if (e) monaco.editor.setModelMarkers(e.getModel(), LINGUAGEM, []);
+        },
+
+        // Linha em execução durante a depuração (0 remove o destaque).
+        destacarLinha: function (id, linha) {
+            if (!linha) {
+                decorar(id, "linha", []);
+                return;
+            }
+            decorar(id, "linha", [{
+                range: new monaco.Range(linha, 1, linha, 1),
+                options: { isWholeLine: true, className: "np-linha-atual", linesDecorationsClassName: "np-seta" }
+            }]);
+            const e = editor(id);
+            if (e) e.revealLineInCenterIfOutsideViewport(linha);
+        },
+
+        // Trecho do código (linha e coluna iniciais e finais, base 1); coluna2 = 0 vai até o fim da linha.
+        destacarTrecho: function (id, linha1, coluna1, linha2, coluna2) {
+            if (!linha1) {
+                decorar(id, "trecho", []);
+                return;
+            }
+            const ed = editor(id);
+            if (!coluna2 && ed) coluna2 = ed.getModel().getLineMaxColumn(linha2);
+            decorar(id, "trecho", [{
+                range: new monaco.Range(linha1, coluna1, linha2, coluna2),
+                options: { className: "np-trecho", inlineClassName: "np-trecho-texto" }
+            }]);
+            const e = editor(id);
+            if (e) e.revealRangeInCenterIfOutsideViewport(new monaco.Range(linha1, coluna1, linha2, coluna2));
+        },
+
+        // Rola um elemento (ex.: a instrução atual na lista do assembly) para dentro da área visível.
+        rolarAte: function (idElemento) {
+            const el = document.getElementById(idElemento);
+            if (el) el.scrollIntoView({ block: "nearest" });
         },
 
         definirFragmento: function (fragmento) {

@@ -1,7 +1,7 @@
 using System.IO.Compression;
 using System.Text;
 
-namespace NPortugol.Playground.Runtime;
+namespace NPortugol.Blazor;
 
 /// <summary>
 /// Codifica o programa (e a entrada) no fragmento da URL (#c=...), comprimido com Deflate

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using NPortugol.Blazor;
 using NPortugol.Runtime;
 
 namespace NPortugol.Playground.Runtime;
@@ -20,7 +21,7 @@ public static class ExecutorPlayground
 
     public static ResultadoExecucao Executar(string codigo, string? entrada)
     {
-        var modulo = new ModuloPlayground(entrada);
+        var modulo = new ModuloEntradaSaida(entrada);
         var cronometro = Stopwatch.StartNew();
 
         try
