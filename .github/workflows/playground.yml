@@ -1,0 +1,75 @@
+# Testa a biblioteca e publica o playground (src/NPortugol.Playground) no GitHub Pages.
+#
+# Antes da primeira execução: em Settings > Pages do repositório, escolha
+# "Source: GitHub Actions".
+name: Playground
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "src/NPortugol/**"
+      - "src/NPortugol.Playground/**"
+      - "src/NPortugol.Tests/**"
+      - ".github/workflows/playground.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Uma publicação por vez; uma nova cancela a anterior se ela ainda não começou o deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.x
+
+      # Só o alvo net10.0: o net48 exige Windows (os testes completos rodam com build.cmd).
+      - name: Testar a biblioteca (netstandard2.0 em .NET 10)
+        run: dotnet test src/NPortugol.Tests/NPortugol.Tests.csproj -f net10.0 -c Release
+
+      - name: Publicar o playground
+        run: dotnet publish src/NPortugol.Playground/NPortugol.Playground.csproj -c Release -o publicado
+
+      - name: Ajustar para o GitHub Pages
+        run: |
+          site=publicado/wwwroot
+          repo="${{ github.event.repository.name }}"
+
+          # O site fica em https://<dono>.github.io/<repo>/, exceto no repositório <dono>.github.io.
+          if [[ "$repo" == *.github.io ]]; then base="/"; else base="/$repo/"; fi
+          sed -i "s|<base href=\"/\" />|<base href=\"$base\" />|" "$site/index.html"
+          grep -q "<base href=\"$base\" />" "$site/index.html"
+
+          # Sem isto o Pages ignora pastas que começam com "_" (como _framework).
+          touch "$site/.nojekyll"
+          # Endereços desconhecidos voltam para o playground.
+          cp "$site/index.html" "$site/404.html"
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: publicado/wwwroot
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

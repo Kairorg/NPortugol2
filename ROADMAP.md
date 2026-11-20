@@ -172,8 +172,9 @@ diagnósticos por compilação, para sublinhar erros enquanto se digita).
    - tema claro e escuro e layout para celular.
 
    Próximos passos:
-   - publicar no GitHub Pages, com um workflow que rode `dotnet publish`, ajuste o
-     `<base href>` para o subcaminho do repositório e adicione o `.nojekyll`;
+   - ativar a publicação no GitHub Pages: o workflow `.github/workflows/playground.yml` já
+     testa, publica e ajusta o subcaminho a cada push na `master`; falta escolher
+     "Source: GitHub Actions" em Settings > Pages;
    - modo PWA, para funcionar offline;
    - erros de execução com a linha do script (depende da Fase 3, item 7);
    - trocar o autocompletar em JavaScript pelo serviço de linguagem (item 1), incluindo
