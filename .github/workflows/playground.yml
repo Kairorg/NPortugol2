@@ -1,4 +1,6 @@
-# Testa a biblioteca e publica o playground (src/NPortugol.Playground) no GitHub Pages.
+# Testa a biblioteca, publica o playground (src/NPortugol.Playground) no GitHub Pages e gera o
+# site do NPortugol Raio-X (src/NPortugol.RaioX) como artefato da execução. O Raio-X é um site
+# separado e cada repositório tem um único site no Pages, por isso ele não é publicado aqui.
 #
 # Antes da primeira execução: em Settings > Pages do repositório, escolha
 # "Source: GitHub Actions".
@@ -9,7 +11,9 @@ on:
     branches: [master]
     paths:
       - "src/NPortugol/**"
+      - "src/NPortugol.Blazor/**"
       - "src/NPortugol.Playground/**"
+      - "src/NPortugol.RaioX/**"
       - "src/NPortugol.Tests/**"
       - ".github/workflows/playground.yml"
   workflow_dispatch:
@@ -63,6 +67,15 @@ jobs:
       - uses: actions/upload-pages-artifact@v4
         with:
           path: publicado/wwwroot
+
+      # Site estático pronto para hospedar (com <base href="/">; ajuste se usar um subcaminho).
+      - name: Publicar o Raio-X
+        run: dotnet publish src/NPortugol.RaioX/NPortugol.RaioX.csproj -c Release -o raiox
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nportugol-raio-x
+          path: raiox/wwwroot
 
   deploy:
     needs: build

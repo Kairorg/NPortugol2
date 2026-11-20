@@ -1,0 +1,46 @@
+@using NPortugol.Runtime
+
+@* Lista o assembly gerado, com a linha do script de cada instrução. *@
+<div class="assembly" role="list" aria-label="Assembly gerado">
+    @if (Linhas is not null && Mapa is not null)
+    {
+        for (var i = 0; i < Linhas.Count; i++)
+        {
+            var indice = i;
+            var texto = Linhas[i];
+            var linhaFonte = Mapa.LineOf(i);
+
+            <div role="listitem" id="asm-@i" class="asm-linha @Classes(indice, texto, linhaFonte)"
+                 @onclick="() => Clicar(linhaFonte)">
+                <span class="asm-indice">@i</span>
+                <span class="asm-texto">@texto</span>
+                <span class="asm-fonte" title="@(linhaFonte is null ? "" : $"Gerada pela linha {linhaFonte} do script")">
+                    @(linhaFonte is null ? "" : $"L{linhaFonte}")
+                </span>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public IList<string>? Linhas { get; set; }
+    [Parameter] public SourceLineMap? Mapa { get; set; }
+    [Parameter] public int? Atual { get; set; }
+    [Parameter] public int? LinhaSelecionada { get; set; }
+    [Parameter] public EventCallback<int> AoClicarLinha { get; set; }
+
+    private string Classes(int indice, string texto, int? linhaFonte)
+    {
+        var classes = new List<string>();
+
+        if (texto.EndsWith(':') && !texto.Contains(' ')) classes.Add("cabecalho");
+        else if (texto.StartsWith('.')) classes.Add("rotulo");
+
+        if (indice == Atual) classes.Add("atual");
+        if (linhaFonte is not null && linhaFonte == LinhaSelecionada) classes.Add("da-linha");
+
+        return string.Join(' ', classes);
+    }
+
+    private Task Clicar(int? linhaFonte) => linhaFonte is int l ? AoClicarLinha.InvokeAsync(l) : Task.CompletedTask;
+}

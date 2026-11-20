@@ -10,8 +10,8 @@ NPortugol is a scripting language with Portuguese syntax (`função`, `variável
 
 - Two solution files list the same projects and folders: `src/NPortugol.slnx` (Visual Studio 2026) and `src/NPortugol.sln` (Visual Studio 2022 format). If you add or remove a project, update **both**, and also the project list in `build.config`. Don't use `dotnet sln add` on the `.sln`: it adds back unused `x64`/`x86` platforms. `WebSample` (ASP.NET, packages.config) is not in either solution.
 - **Library and tests only** (SDK-style projects): `dotnet test src/NPortugol.Tests/NPortugol.Tests.csproj` runs the suite on `net48` and on `net10.0` (which exercises the `netstandard2.0` library). Run one fixture or test with `--filter "FullyQualifiedName~CompilerRegressionTestCase"`, and one runtime with `-f net10.0`.
-- **Playground**: `dotnet run --project src/NPortugol.Playground` serves it locally. `dotnet publish src/NPortugol.Playground -c Release -o <dir>` produces a static site in `<dir>/wwwroot` that any static host can serve.
-- **CI**: `.github/workflows/playground.yml` runs on pushes to `master`. It runs the `net10.0` tests, publishes the playground, rewrites `<base href>` to `/<repo>/`, adds `.nojekyll` and deploys to GitHub Pages. The `net48` tests need Windows and only run through `build.cmd`.
+- **Web sites** (Blazor WebAssembly): `dotnet run --project src/NPortugol.Playground` or `dotnet run --project src/NPortugol.RaioX` serves one locally. `dotnet publish <project> -c Release -o <dir>` produces a static site in `<dir>/wwwroot` that any static host can serve.
+- **CI**: `.github/workflows/playground.yml` runs on pushes to `master`. It runs the `net10.0` tests, publishes the playground, rewrites `<base href>` to `/<repo>/`, adds `.nojekyll` and deploys to GitHub Pages. It also publishes the Raio-X as a downloadable artifact (`nportugol-raio-x`): the Raio-X is meant to be a separate site, and a repository has only one Pages site. The `net48` tests need Windows and only run through `build.cmd`.
 - **Whole solution**: needs the Visual Studio MSBuild, because `dotnet build` can't compile the `.resx` files of the old-style WinForms projects. `build.cmd <Target>` finds it with `vswhere` and runs `build.config`, which builds an explicit list of projects (everything except the playground) into `build/`. Targets: `Clean`, `Build` (restores NuGet first), `Rebuild`, `Test` (both runtimes), `Merge` (ILMerge 3 merges `Npc.exe` with its DLLs), `Package*` (`PackagePlayground` publishes the site to `build/playground` and zips it), and `Integrate` (the default: rebuild, test, package into `pkg/`). `ClickToBuild.cmd` runs `build.cmd integrate`.
 - With `OutDir` forced to `build/`, the `netstandard2.0` library and the `net10.0` tests go into `build/netstandard2.0/` and `build/net10.0/`. The `TreatAsLocalProperty="OutDir"` block in their `.csproj` handles this; without it the two `NPortugol.dll` files would overwrite each other.
 - Tests use NUnit 3, Moq and `Microsoft.NET.Test.Sdk` from NuGet.
@@ -29,16 +29,29 @@ The pipeline is **source → ANTLR 4 parse tree → AST → textual assembly ("A
 
 ### Hosts and tools built on the core library
 - **Npc**: command-line compiler and runner.
-- **GrammarIDE**: WinForms tool (MVP: `Presenters/`, `Views/`) for viewing the AST (rendered with Graphviz through `Core/AstDotGenerator`) and stepping through execution.
+- **GrammarIDE**: WinForms tool (MVP: `Presenters/`, `Views/`) for viewing the AST (rendered with Graphviz through `Core/AstDotGenerator`) and stepping through execution. NPortugol.RaioX replaces it on the web.
 - **TurboNPortugol**: WinForms IDE for end users, with example scripts in `Exemplos/`.
 - **NPortugol.Web**: an ASP.NET `IHttpHandler` (`NPHttpHandler`) that routes requests to Classic, MVC (`App/Mvc`) or Asm apps written in `.np` scripts. `WebSample` is a sample site that uses it.
-- **NPortugol.Playground**: Blazor WebAssembly site that compiles and runs scripts entirely in the browser, with no server.
-  - The Monaco editor comes from the BlazorMonaco package. `wwwroot/js/nportugol.js` registers the language (Monarch highlighting, indentation, keyword and built-in function completion) and draws error markers.
-  - `Runtime/ExecutorPlayground` runs a script with `Motor.MaxInstructions` set, because the browser can't interrupt a running loop.
-  - `Runtime/ModuloPlayground` provides `imprima`, `imprimaLinha`, `imprimaVetor` and `leia` (which reads lines from the Entrada box).
-  - `Runtime/LinkCompartilhavel` stores the program in the URL fragment (`#c=`, Deflate + Base64).
-  - Examples are `Exemplos/*.np`, embedded as resources; register new ones in `Runtime/Exemplos.cs`.
-  - Gotchas: `Program.cs` forces the pt-BR culture, and the `.csproj` loads all ICU data so that works in any browser. `TrimmerRootAssembly` keeps NPortugol intact because the VM reads properties by reflection (`v.tamanho`, `data.numerodia`).
+- **Web sites** (Blazor WebAssembly, .NET 10). Both compile and run scripts entirely in the browser, with no server, and use the Monaco editor from the BlazorMonaco package.
+  - **NPortugol.Blazor** is a Razor class library with the code both sites share:
+    - `wwwroot/nportugol.js` (served as `_content/NPortugol.Blazor/nportugol.js`) registers the language in Monaco (highlighting, indentation, keyword and built-in function completion) and draws error markers, the current debug line and highlighted ranges.
+    - `ModuloEntradaSaida` provides `imprima`, `imprimaLinha`, `imprimaVetor` and `leia` (which reads lines from the Entrada box).
+    - `LinkCompartilhavel` stores the program in the URL fragment (`#c=`, Deflate + Base64).
+    - The examples are `Exemplos/*.np`, embedded as resources; register new ones in `Exemplos.cs`.
+  - **NPortugol.Playground** is for learners: edit, run, share. `Runtime/ExecutorPlayground` runs a script with `Motor.MaxInstructions` set, because the browser can't interrupt a running loop.
+  - **NPortugol.RaioX** is the web successor of GrammarIDE, for people studying the compiler. Its layout is IDE-like (`Pages/RaioX.razor`, `wwwroot/css/app.css`):
+    - The regions are an activity bar, a side bar (Explorador: examples and an outline of functions; Execução: variables and both stacks, built from `Componentes/SecaoLateral`), the editor, a bottom panel (Saída, Entrada, Problemas), a right panel (Árvore sintática, Assembly) and a status bar coloured by mode.
+    - `wwwroot/js/ide.js` provides the draggable splitters (CSS variables `--largura-lateral`, `--largura-direita`, `--altura-inferior`, saved in `localStorage`) and the keyboard shortcuts: F5 debug or continue, Ctrl+F5 run, F10 next line, F11 next instruction, Shift+F5 stop. The shortcuts call `Atalho` through `[JSInvokable]`.
+    - Each grid region has an explicit column or row, so hiding one (`display: none`) doesn't shift the others.
+    - Features:
+      - It recompiles while you type (`Analise/Compilacao`).
+      - It draws the AST as SVG (`Analise/LayoutDaArvore`, `Componentes/VisaoDaArvore`). Clicking a node highlights its source range.
+      - It lists the generated assembly with the source line of each instruction (`Componentes/VisaoDoAssembly`).
+      - It debugs step by step (`Depuracao/SessaoDeDepuracao`). It runs the VM in `Motor.Debug` mode without loading the source map into the context, so each `Executar()` runs one instruction. "Next line" repeats that until the next instruction belongs to another source line or another call depth. Variables and the call stack are shown with friendly names (`principal`, `fatorial #2`).
+  - Gotchas:
+    - Each site's `Program.cs` forces the pt-BR culture, and its `.csproj` loads all ICU data so that works in any browser.
+    - `TrimmerRootAssembly` keeps NPortugol intact, because the VM reads properties by reflection (`v.tamanho`, `data.numerodia`).
+    - Numbers written into SVG must use `CultureInfo.InvariantCulture`, because the app culture (pt-BR) would write decimal commas.
 
 ### Tests (`src/NPortugol.Tests`)
 - `GrammarTestCase` checks AST shapes (`BaseTest.BuildAST` returns the first `FUNC` node). `CompilerTestCase` checks ASM emission. `CompilerRegressionTestCase` pins the bugs fixed in the ANTLR 4 migration and the `CompilationException` behaviour.
@@ -47,6 +60,7 @@ The pipeline is **source → ANTLR 4 parse tree → AST → textual assembly ("A
 ## Gotchas
 - **ASM output is a compatibility contract.** Compiled scripts, saved `.npx` files and the tests depend on the exact instruction sequence and label numbering. If you change the walker or `Emissor`, compare the generated ASM before and after on real scripts (the `TurboNPortugol/Exemplos` scripts are a good corpus).
 - Behaviours preserved on purpose: `então` is optional (the bundled examples omit it), a method call on a host object pushes its arguments but emits no call, `para ... até N` excludes `N`, and decimals are parsed and printed with the current culture (only pt-BR works). See `ROADMAP.md` before "fixing" any of these.
+- **`Bytecode.SourceMap` is not a direct index.** Entry `K` refers to assembly line `K + 1 + 2 × (number of parameters of the function)`. Use `Runtime/SourceLineMap` (covered by `SourceLineMapTestCase`) to map assembly lines to source lines. The raw format was kept because it is part of the bytecode. GrammarIDE's debugger reads it raw, so it highlights the wrong line inside functions with parameters.
 - `+` adds numbers only; it fails at run time on text (`"a" + nome`). To print several values, pass them all to `imprima(...)`.
 - The library and the tests use C# 7.3 (the default for .NET Framework 4.8). The playground uses the C# version of .NET 10.
 - Many source files are **ISO-8859-1 (Latin-1)**, not UTF-8 (for example `Runtime/Interop/Hospedagem.cs` and `Modulos/ModuloPadrao.cs`). Keep the existing encoding when editing files with accented strings, or they will be garbled. The grammars and new files are UTF-8. Script files (`.np`) are UTF-8 with a BOM.

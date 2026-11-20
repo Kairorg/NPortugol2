@@ -1,0 +1,66 @@
+@using NPortugol.RaioX.Depuracao
+
+@* Estado da VM na vista Execução da barra lateral. *@
+<SecaoLateral Titulo="Variáveis" Contador="@Variaveis.Count">
+    @if (Variaveis.Count == 0)
+    {
+        <p class="vazio">@(Ativa ? "Nenhuma variável ainda." : "Inicie a depuração (F5).")</p>
+    }
+    else
+    {
+        <table class="tabela-estado">
+            <tbody>
+                @foreach (var grupo in Variaveis.GroupBy(v => v.Funcao))
+                {
+                    <tr class="grupo"><td colspan="2">@grupo.Key</td></tr>
+                    @foreach (var v in grupo)
+                    {
+                        <tr>
+                            <td class="nome">@v.Nome</td>
+                            <td class="valor">@v.Valor</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+</SecaoLateral>
+
+<SecaoLateral Titulo="Pilha de chamadas" Contador="@PilhaDeChamadas.Count">
+    @if (PilhaDeChamadas.Count == 0)
+    {
+        <p class="vazio">Vazia.</p>
+    }
+    else
+    {
+        <ol class="lista-pilha">
+            @for (var i = 0; i < PilhaDeChamadas.Count; i++)
+            {
+                <li class="@(i == 0 ? "topo" : "")">@PilhaDeChamadas[i]</li>
+            }
+        </ol>
+    }
+</SecaoLateral>
+
+<SecaoLateral Titulo="Pilha de avaliação" Contador="@PilhaDeAvaliacao.Count">
+    @if (PilhaDeAvaliacao.Count == 0)
+    {
+        <p class="vazio">Vazia.</p>
+    }
+    else
+    {
+        <ol class="lista-pilha">
+            @for (var i = 0; i < PilhaDeAvaliacao.Count; i++)
+            {
+                <li class="@(i == 0 ? "topo" : "")">@PilhaDeAvaliacao[i]</li>
+            }
+        </ol>
+    }
+</SecaoLateral>
+
+@code {
+    [Parameter] public bool Ativa { get; set; }
+    [Parameter] public IReadOnlyList<Variavel> Variaveis { get; set; } = Array.Empty<Variavel>();
+    [Parameter] public IReadOnlyList<string> PilhaDeAvaliacao { get; set; } = Array.Empty<string>();
+    [Parameter] public IReadOnlyList<string> PilhaDeChamadas { get; set; } = Array.Empty<string>();
+}

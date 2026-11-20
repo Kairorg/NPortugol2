@@ -1,0 +1,55 @@
+@using System.Globalization
+@using NPortugol.RaioX.Analise
+
+@* Desenha a AST em SVG. Clicar num nó destaca o trecho do código correspondente. *@
+<div class="arvore">
+    <div class="painel-ferramentas">
+        <button class="botao-icone" @onclick="() => AlterarZoom(-0.15)" title="Diminuir zoom" aria-label="Diminuir zoom">−</button>
+        <span class="zoom">@($"{Zoom:P0}")</span>
+        <button class="botao-icone" @onclick="() => AlterarZoom(0.15)" title="Aumentar zoom" aria-label="Aumentar zoom">+</button>
+        <span class="legenda">
+            <span class="amostra estrutura"></span>estrutura
+            <span class="amostra identificador"></span>identificador
+            <span class="amostra literal"></span>valor
+            <span class="amostra operador"></span>operador
+        </span>
+    </div>
+
+    <div class="arvore-area">
+        @if (Arvore is not null)
+        {
+            <svg width="@F(Arvore.Largura * Zoom)" height="@F(Arvore.Altura * Zoom)"
+                 viewBox="0 0 @F(Arvore.Largura) @F(Arvore.Altura)" role="img" aria-label="Árvore sintática">
+                @foreach (var no in Arvore.Nos)
+                {
+                    if (no.IdPai is int pai)
+                    {
+                        var origem = Arvore.Nos[pai];
+                        <line class="aresta" x1="@F(origem.X)" y1="@F(origem.Y + LayoutDaArvore.AlturaNo)" x2="@F(no.X)" y2="@F(no.Y)" />
+                    }
+                }
+                @foreach (var no in Arvore.Nos)
+                {
+                    <g class="no @no.Classe @(no.Id == Selecionado ? "selecionado" : "")" @onclick="() => AoSelecionar.InvokeAsync(no)">
+                        <title>@no.Descricao</title>
+                        <rect x="@F(no.X - no.Largura / 2)" y="@F(no.Y)" width="@F(no.Largura)" height="@F(LayoutDaArvore.AlturaNo)" rx="6" />
+                        <text x="@F(no.X)" y="@F(no.Y + 18.5)" text-anchor="middle">@no.Texto</text>
+                    </g>
+                }
+            </svg>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public ArvoreDesenhada? Arvore { get; set; }
+    [Parameter] public int? Selecionado { get; set; }
+    [Parameter] public EventCallback<NoDesenhado> AoSelecionar { get; set; }
+
+    private double Zoom { get; set; } = 1;
+
+    private void AlterarZoom(double delta) => Zoom = Math.Clamp(Math.Round(Zoom + delta, 2), 0.3, 2.5);
+
+    // O app usa a cultura pt-BR; o SVG exige ponto decimal.
+    private static string F(double valor) => valor.ToString("0.##", CultureInfo.InvariantCulture);
+}

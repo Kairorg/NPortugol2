@@ -35,6 +35,14 @@ A migração para ANTLR 4 foi concluída e trouxe junto a modernização mínima
   de instruções contra laços infinitos, exemplos prontos e link compartilhável. O download
   inicial é de cerca de 3,7 MB comprimidos. Ainda não foi publicado: o pacote
   `NPortugol-Playground-*.zip` gerado pelo build está pronto para qualquer hospedagem estática.
+- **NPortugol Raio-X** (`src/NPortugol.RaioX`, parte da Fase 5), sucessor web do GrammarIDE,
+  para quem estuda o compilador. É um site separado do playground: mostra a árvore sintática
+  (clicar num nó destaca o trecho do código), o assembly gerado com a linha de origem de cada
+  instrução, e depura passo a passo (por linha ou por instrução) mostrando variáveis, pilha de
+  avaliação e pilha de chamadas. O código comum aos dois sites está em `src/NPortugol.Blazor`.
+- Encontrado e contornado um defeito antigo do source map: dentro de funções com parâmetros ele
+  aponta para a instrução errada. O depurador do GrammarIDE herdava o erro; o Raio-X usa a nova
+  classe `SourceLineMap`, que faz a tradução correta.
 
 ## Fase 1: limpeza e automação do build
 
@@ -181,15 +189,22 @@ diagnósticos por compilação, para sublinhar erros enquanto se digita).
      variáveis e funções do próprio script;
    - executar fora da thread da interface, para que um programa longo não congele a página
      enquanto roda (hoje o limite de instruções garante só que ele termina).
-3. **Modo avançado no playground**, substituto do GrammarIDE: visualização da AST (desenhada
-   no navegador, sem depender do Graphviz) e execução passo a passo mostrando o assembly, a
-   pilha e as variáveis. Para depurar as gramáticas, usar a extensão ANTLR4 do VS Code, que já
-   mostra a árvore sintática e as ambiguidades a partir dos arquivos `.g4`.
+3. **NPortugol Raio-X**, substituto do GrammarIDE: **primeira versão feita**, como site separado
+   (o público é outro: quem estuda compiladores). Tem árvore sintática em SVG, assembly com a
+   linha de origem, e depuração por linha e por instrução com variáveis e as duas pilhas. Para
+   depurar as gramáticas, usar a extensão ANTLR4 do VS Code, que mostra a árvore sintática e as
+   ambiguidades a partir dos arquivos `.g4`. Próximos passos:
+   - decidir onde hospedar: o GitHub Pages deste repositório já é do playground; o workflow gera
+     o site do Raio-X como artefato, pronto para outro repositório de Pages ou outro serviço;
+   - pontos de parada (clicar na margem do editor) e "executar até o cursor";
+   - mostrar a árvore sintática do ANTLR (a de antes da AST), para quem estuda a gramática;
+   - ajustar o zoom da árvore automaticamente à largura do painel.
 4. **Extensão para VS Code**, com um servidor LSP sobre o serviço de linguagem, para quem já
    usa um editor de verdade.
 5. **App desktop com Avalonia e AvaloniaEdit**, só se houver demanda real por um app offline
    instalado. Roda em Windows, Linux e macOS e reaproveita o serviço de linguagem.
-6. Aposentar GrammarIDE e TurboNPortugol quando o playground cobrir o que eles fazem.
+6. Aposentar o TurboNPortugol (coberto pelo playground) e o GrammarIDE (coberto pelo Raio-X)
+   quando os sites estiverem publicados.
 
 Fora do desktop, `NPortugol.Web` deve ganhar um middleware ASP.NET Core além do `IHttpHandler`
 do System.Web.

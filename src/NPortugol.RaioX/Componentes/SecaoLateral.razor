@@ -1,0 +1,27 @@
+@* Seção recolhível da barra lateral (cabeçalho em caixa alta, como nas IDEs). *@
+<section class="secao @(aberta ? "aberta" : "")">
+    <button class="secao-cabecalho" @onclick="() => aberta = !aberta" aria-expanded="@aberta">
+        <Icone Nome="seta" Tamanho="12" Classe="secao-seta" />
+        <span class="secao-titulo">@Titulo</span>
+        @if (Contador is int n)
+        {
+            <span class="contador">@n</span>
+        }
+    </button>
+    @if (aberta)
+    {
+        <div class="secao-conteudo">@ChildContent</div>
+    }
+</section>
+
+@code {
+    [Parameter, EditorRequired] public string Titulo { get; set; } = "";
+    [Parameter] public int? Contador { get; set; }
+    [Parameter] public bool AbertaInicialmente { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Estado próprio: um parâmetro seria redefinido a cada nova renderização do pai.
+    private bool aberta;
+
+    protected override void OnInitialized() => aberta = AbertaInicialmente;
+}
