@@ -1,4 +1,4 @@
-using Antlr.Runtime;
+using System.Collections.Generic;
 using NPortugol.Runtime;
 using NPortugol.Runtime.Asm;
 using NUnit.Framework;
@@ -97,12 +97,32 @@ namespace NPortugol.Tests.Runtime.Asm.Generated
             parser.script();
         }
 
-        public ASMParser GetParser(string script)
+        public AsmParserHarness GetParser(string script)
         {
-            var input = new ANTLRStringStream(script);
-            var lexer = new ASMLexer(input);
-            var tokens = new CommonTokenStream(lexer);
-            return new ASMParser(tokens);
+            return new AsmParserHarness(script);
+        }
+
+        // Expõe o AsmProgramBuilder com os mesmos nomes do antigo ASMParser (ANTLR 3).
+        public class AsmParserHarness
+        {
+            private readonly string source;
+            private readonly AsmProgramBuilder builder = new AsmProgramBuilder();
+
+            public AsmParserHarness(string source)
+            {
+                this.source = source;
+            }
+
+            public void script()
+            {
+                builder.Build(source);
+            }
+
+            public FunctionTable _functionTable { get { return builder.FunctionTable; } }
+
+            public List<Instruction> _instructions { get { return builder.Instructions; } }
+
+            public Dictionary<string, int> _labels { get { return builder.Labels; } }
         }
     }
 }

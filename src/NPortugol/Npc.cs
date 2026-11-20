@@ -1,6 +1,6 @@
 using System.IO;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
+using System.Linq;
+using NPortugol.Ast;
 using NPortugol.Runtime;
 
 namespace NPortugol
@@ -9,22 +9,27 @@ namespace NPortugol
     {
         public bool DebugInfo { get; set; }
 
+        /// <summary>
+        /// Compila o script para bytecode. Lança <see cref="CompilationException"/> (com linha
+        /// e coluna) se o script tiver erro de sintaxe ou usar construção não suportada.
+        /// </summary>
         public Bytecode Compilar(string script)
         {
-            var input  = new ANTLRStringStream(script);
-            var lexer  = new NPortugolLexer(input);
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new NPortugolParser(tokens);
+            var ast = GerarAst(script);
 
-            var ast = parser.script();
+            var walker = new NPortugolWalker { DebugInfo = DebugInfo };
 
-            var tree   = (CommonTree)ast.Tree;
-            var nodes  = new CommonTreeNodeStream(tree) { TokenStream = tokens };
-            var walker = new NPortugolWalker(nodes) { DebugInfo = DebugInfo };
+            var asm = walker.Walk(ast);
 
-            var asm = walker.script();
+            var functions = ast.Children.Select(f => f.GetChild(0).Text).ToList();
 
-            return new Bytecode(asm, parser.Functions, walker.SourceMap);
+            return new Bytecode(asm, functions, walker.SourceMap);
+        }
+
+        /// <summary>Analisa o script e devolve a AST (raiz SCRIPT com um nó FUNC por função).</summary>
+        public AstNode GerarAst(string script)
+        {
+            return AstBuilder.Parse(script);
         }
 
         public Bytecode CompilarArquivo(string scriptfile)

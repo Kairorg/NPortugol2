@@ -14,3 +14,5 @@ _ReSharper.*/
 *.test-cache
 *.userprefs
 *.xml
+pkg/
+.antlr/

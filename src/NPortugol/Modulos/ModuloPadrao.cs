@@ -85,7 +85,7 @@ namespace NPortugol.Modulos
             DateTime.TryParse(parameters[0].ToString(), out data);
 
             if (data < new DateTime(2, 1, 1))
-                throw new Exception($"Não foi possível converter '{parameters[0]}' em uma data válida.");
+                throw new Exception(string.Format("Não foi possível converter '{0}' em uma data válida.", parameters[0]));
 
             return data;
         }

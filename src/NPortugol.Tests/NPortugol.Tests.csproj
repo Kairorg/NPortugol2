@@ -1,153 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{40C491A3-6DF9-4995-B7F4-7353EE864FB7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net48</TargetFramework>
     <RootNamespace>NPortugol.Tests</RootNamespace>
     <AssemblyName>NPortugol.Tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <LangVersion>7.3</LangVersion>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\..\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Moq">
-      <HintPath>..\..\lib\Moq.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
-    </Reference>
+    <!-- Fora do projeto desde a versão .NET 3.5 (não compila com a API atual). -->
+    <Compile Remove="Runtime\Integration\HostContainerTestCase.cs" />
+    <None Include="Runtime\Integration\HostContainerTestCase.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="BaseTest.cs" />
-    <Compile Include="CompilerTestCase.cs" />
-    <Compile Include="GrammarTestCase.cs" />
-    <Compile Include="Integration\InteropTestCase.cs" />
-    <Compile Include="Integration\Samples.cs" />
-    <Compile Include="Runtime\Asm\Generated\ANTLRParserTestCase.cs" />
-    <Compile Include="Runtime\Bootstrap\RuntimeContextTestCase.cs" />
-    <Compile Include="Runtime\Instructions\Arithmetic\ArithmeticTestCase.cs" />
-    <Compile Include="Runtime\Instructions\BaseInstTest.cs" />
-    <Compile Include="Runtime\Instructions\DCLTestCase.cs" />
-    <Compile Include="Runtime\Instructions\JMPTestCase.cs" />
-    <Compile Include="Runtime\Integration\BaseRuntimeTest.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\ADDTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\DECTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\DIVTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\INCTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\MODTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\MULTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\NEGTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\POWTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\Arithmetic\SUBTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\BaseInstTest.cs" />
-    <Compile Include="Runtime\Integration\Instructions\BranchingTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\CALLTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\DCLTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\HOSTTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\MOVTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\PUSHPOPTestCase.cs" />
-    <Compile Include="Runtime\Integration\Instructions\RETTestCase.cs" />
-    <Compile Include="Runtime\Integration\Sample\FatorialTestCase.cs" />
-    <Compile Include="Runtime\Integration\VMEngine\LoopTestCase.cs" />
-    <Compile Include="Runtime\Integration\VMEngine\RecursionTestCase.cs" />
-    <Compile Include="Runtime\Specs\InstrucStreamDesign.cs" />
-    <Compile Include="Runtime\Specs\InstructionDesign.cs" />
-    <Compile Include="Runtime\Specs\RunnableDesign.cs" />
-    <Compile Include="Runtime\Specs\RuntimeContextDesign.cs" />
-    <Compile Include="TranslationTestCase.cs" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
   </ItemGroup>
+
   <ItemGroup>
-    <ProjectReference Include="..\NPortugol\NPortugol.csproj">
-      <Project>{93E5D4EF-0D95-4FE5-AA63-4B9BC997607D}</Project>
-      <Name>NPortugol</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\NPortugol\NPortugol.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

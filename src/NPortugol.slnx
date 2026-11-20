@@ -1,0 +1,31 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+  </Configurations>
+  <Folder Name="/Build/">
+    <File Path="../build.cmd" />
+    <File Path="../build.config" />
+    <File Path="../tools/antlr4/gerar.cmd" />
+  </Folder>
+  <Folder Name="/Docs/">
+    <File Path="../CLAUDE.md" />
+    <File Path="../README.md" />
+    <File Path="../ROADMAP.md" />
+  </Folder>
+  <Folder Name="/Grammar/">
+    <File Path="grammar/ASM.g4" />
+    <File Path="grammar/NPortugol.g4" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="NPortugol.Tests/NPortugol.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="GrammarIDE/GrammarIDE.csproj" />
+    <Project Path="Npc/Npc.csproj" />
+    <Project Path="TurboNPortugol/TurboNPortugol.csproj" />
+  </Folder>
+  <Folder Name="/Web/">
+    <Project Path="NPortugol.Web/NPortugol.Web.2010.csproj" />
+  </Folder>
+  <Project Path="NPortugol/NPortugol.csproj" />
+</Solution>

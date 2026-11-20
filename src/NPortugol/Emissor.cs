@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
-using NPortugol;
+using NPortugol.Ast;
 
 namespace NPortugol
 {
@@ -17,6 +15,8 @@ namespace NPortugol
         private Stack<string> forSelectComp = new Stack<string>();
 
         private int caseCounter = 0;
+
+        private Stack<int> caseCounters = new Stack<int>();
 
         public List<string> function = new List<string>();
         public List<object> @params = new List<object>();
@@ -37,7 +37,7 @@ namespace NPortugol
 
         #region function
 
-        public void EmitFunction(IToken token)
+        public void EmitFunction(AstNode token)
         {
             var first = script.Count == 0;
 
@@ -85,20 +85,20 @@ namespace NPortugol
 
         #endregion
 
-        public void EmitVar(IToken id)
+        public void EmitVar(AstNode id)
         {
             function.Add(AsmTemplate.Declare(id.Text));
             MapFunction(id);
         }
 
-        private void MapFunction(IToken token)
+        private void MapFunction(AstNode token)
         {
             if (!DebugInfo) return;
 
             SourceFunc.Add(function.Count, token.Line-1);
         }
 
-        public void EmitAssign(IToken token, object value)
+        public void EmitAssign(AstNode token, object value)
         {
             EmitPop(token);
 
@@ -106,7 +106,7 @@ namespace NPortugol
            // MapFunction(token);
         }
 
-        public void EmitAssign(IToken token, int start, int end)
+        public void EmitAssign(AstNode token, int start, int end)
         {
             var index = 0;
 
@@ -117,12 +117,11 @@ namespace NPortugol
             }
         }
 
-        public void EmitAssignArray(IToken token, CommonTree tree)
+        public void EmitAssignArray(AstNode token, AstNode list)
         {
             var index = 0;
-            var asgnNode = (CommonTree) tree.Parent;
 
-            foreach (var item in asgnNode.Children)
+            foreach (var item in list.Children)
             {
                 function.Add(AsmTemplate.AssignIndex(token.Text, int.Parse(item.Text), index++));
                 MapFunction(token);
@@ -134,7 +133,7 @@ namespace NPortugol
             function.Add(AsmTemplate.Push(value));
         }
 
-        public void EmitPush(object value, IToken token)
+        public void EmitPush(object value, AstNode token)
         {
             function.Add(AsmTemplate.Push(value));
             MapFunction(token);
@@ -151,19 +150,19 @@ namespace NPortugol
             function.Add(AsmTemplate.Push(value, id));
         }
 
-        public void EmitPop(IToken token)
+        public void EmitPop(AstNode token)
         {
             function.Add(AsmTemplate.Pop(token.Text));
             MapFunction(token);
         }
 
-        public void EmitPop(IToken token, int index)
+        public void EmitPop(AstNode token, int index)
         {
             function.Add(AsmTemplate.Pop(token.Text, index));
             MapFunction(token);
         }
 
-        public void EmitPop(IToken token, string id)
+        public void EmitPop(AstNode token, string id)
         {
             function.Add(AsmTemplate.Pop(token.Text, id));
             MapFunction(token);
@@ -194,7 +193,7 @@ namespace NPortugol
             function.Add(AsmTemplate.StackMod());
         }
 
-        public void EmitCall(IToken token)
+        public void EmitCall(AstNode token)
         {
             function.Add(AsmTemplate.Call(token.Text));
             MapFunction(token);
@@ -207,7 +206,7 @@ namespace NPortugol
             function.Add("RET"); 
         }
 
-        public void EmitRet(IToken token)
+        public void EmitRet(AstNode token)
         {
             if (function.Count > 0 && function[function.Count - 1].Equals("RET")) return;
 
@@ -314,7 +313,7 @@ namespace NPortugol
             function.Add(AsmTemplate.Label(slabel));
         }
 
-        public void EmitInitFor(IToken token, bool inc)
+        public void EmitInitFor(AstNode token, bool inc)
         {
             var id = forIncId.Pop();
 
@@ -329,7 +328,7 @@ namespace NPortugol
                              : AsmTemplate.JumpLessEquals(CreateAndPushLabel()));
         }
 
-        public void EmitEndFor(IToken token, bool inc)
+        public void EmitEndFor(AstNode token, bool inc)
         {
             var endLoop = labels.Pop();
             var initLoop = labels.Pop();
@@ -397,6 +396,9 @@ namespace NPortugol
 
         public void EmitInitSel(object value)
         {
+            caseCounters.Push(caseCounter);
+            caseCounter = 0;
+
             forSelectComp.Push(value.ToString());
 
             CreateAndPushLabel();
@@ -404,6 +406,8 @@ namespace NPortugol
 
         public void EmitEndSel(object value)
         {
+            caseCounter = caseCounters.Pop();
+
             forSelectComp.Pop();
 
             EmitLabel(labels.Pop());
@@ -440,23 +444,23 @@ namespace NPortugol
             function.Add(temp);
         }
 
-        private void EmitHost(IToken objectToken, IToken propToken)
+        private void EmitHost(AstNode objectToken, AstNode propToken)
         {
             function.Add(AsmTemplate.PropertyCall(objectToken.Text, propToken.Text));
             MapFunction(propToken);
         }
 
-        public void EmitPropCall(IToken objectToken, IToken propToken)
+        public void EmitPropCall(AstNode objectToken, AstNode propToken)
         {
             EmitHost(objectToken, propToken);
         }
 
-        public void EmitMethodCall(IToken objectToken, IToken propToken)
+        public void EmitMethodCall(AstNode objectToken, AstNode propToken)
         {
 
         }
 
-        public void EmitAsmCode(List<CommonTree> tree)
+        public void EmitAsmCode(IEnumerable<AstNode> tree)
         {
             foreach (var item in tree)
             {

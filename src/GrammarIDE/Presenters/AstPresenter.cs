@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using GrammarIDE.Core;
 using GrammarIDE.Views.Ast;
 using NPortugol;
+using NPortugol.Ast;
 
 namespace GrammarIDE.Presenters
 {
@@ -41,30 +40,17 @@ namespace GrammarIDE.Presenters
 
         public void Parse(string script)
         {
-            NPortugolParser parser = null;
-
             try
             {
                 configRepo.SaveScript(script);
 
                 MainPresenter.MainView.ClearOutput();
 
-                var input = new ANTLRStringStream(script);
-                var lexer = new NPortugolLexer(input);
-                var tokens = new CommonTokenStream(lexer);
-                parser = new NPortugolParser(tokens);
-
-                var r = parser.script();
-
-                var t = (CommonTree)r.Tree;
-
-                CreateASTGraph(t);
+                CreateASTGraph(new Npc().GerarAst(script));
             }
-            catch (RecognitionException ex)
+            catch (CompilationException ex)
             {
-                var message = parser.GetErrorMessage(ex);
-
-                MainPresenter.Error(message);
+                MainPresenter.Error(ex.Message);
             }
             catch (Exception ex)
             {
@@ -72,7 +58,7 @@ namespace GrammarIDE.Presenters
             }
         }
 
-        private void CreateASTGraph(CommonTree commonTree)
+        private void CreateASTGraph(AstNode ast)
         {
             if (string.IsNullOrEmpty(Config.DotPath)) return;
 
@@ -83,8 +69,7 @@ namespace GrammarIDE.Presenters
                 throw new Exception("Caminho da ferramenta dot.exe inválido.");
             }
 
-            var gen = new DotTreeGenerator();
-            var dotgraph = gen.ToDot(commonTree);
+            var dotgraph = new AstDotGenerator().ToDot(ast);
 
             dotgraph = new DotGraphStyle { FontSize = AstView.FontSize }.Apply(dotgraph);
 

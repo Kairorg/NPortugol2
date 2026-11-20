@@ -9,7 +9,7 @@ namespace NPortugol.Tests
         {
             var tree = BuildAST("função main() fim");
             
-            Assert.AreEqual("FUNC", tree.Token.Text);
+            Assert.AreEqual("FUNC", tree.Text);
             Assert.AreEqual("main", tree.Children[0].Text);
         }
 

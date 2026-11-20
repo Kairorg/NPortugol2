@@ -1,21 +1,20 @@
 using System.Collections.Generic;
 using System.Text;
-using Antlr.Runtime;
 
 namespace NPortugol.Runtime.Asm
 {
     public class AntlrRunnableBuilder: IRunnableBuilder
     {
-        private ASMParser parser;
+        private string script;
 
         public bool DebugInfo { get; set; }
 
+        /// <summary>Erros de sintaxe recuperados na última chamada a <see cref="Build"/>.</summary>
+        public IList<string> Errors { get; private set; }
+
         public void Load(string script)
         {
-            var input = new ANTLRStringStream(script);
-            var lexer = new ASMLexer(input);
-            var tokens = new CommonTokenStream(lexer);
-            parser = new ASMParser(tokens) {DebugInfo = DebugInfo};
+            this.script = script;
         }
 
         public void Load(IEnumerable<string> lines)
@@ -32,14 +31,13 @@ namespace NPortugol.Runtime.Asm
 
         public Runnable Build()
         {
-            var list = new List<Instruction>();
+            var builder = new AsmProgramBuilder {DebugInfo = DebugInfo};
 
-            var instructions = parser.script();
+            var instructions = builder.Build(script);
 
-            if (instructions != null)
-                list.AddRange(instructions);
-            
-            return new Runnable(new InstrucStream(list.ToArray()), parser._functionTable, new SymbolTable(null));
+            Errors = builder.Errors;
+
+            return new Runnable(new InstrucStream(new List<Instruction>(instructions).ToArray()), builder.FunctionTable, new SymbolTable(null));
         }
     }
 }

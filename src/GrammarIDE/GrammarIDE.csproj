@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GrammarIDE</RootNamespace>
     <AssemblyName>GrammarIDE</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -80,11 +80,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Antlr3.Runtime">
-      <HintPath>..\..\lib\Antlr3.Runtime.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\AstDotGenerator.cs" />
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\DotGraphStyle.cs" />
     <Compile Include="Core\Prompt.cs" />

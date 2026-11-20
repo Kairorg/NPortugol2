@@ -1,6 +1,4 @@
-using System;
-using Antlr.Runtime;
-using Antlr.Runtime.Tree;
+using NPortugol.Ast;
 using NUnit.Framework;
 
 namespace NPortugol.Tests
@@ -8,15 +6,11 @@ namespace NPortugol.Tests
     [TestFixture]
     public class BaseTest
     {
-        public CommonTree BuildAST(string script)
+        // Devolve o nó da primeira função (FUNC), como a AST do ANTLR 3 fazia para scripts
+        // com uma única função.
+        public AstNode BuildAST(string script)
         {
-            var input = new ANTLRStringStream(script);
-            var lexer = new NPortugolLexer(input);
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new NPortugolParser(tokens);
-            var ast = parser.script();
-
-            return (CommonTree) ast.Tree;
+            return new Npc().GerarAst(script).GetChild(0);
         }
     }
 }
