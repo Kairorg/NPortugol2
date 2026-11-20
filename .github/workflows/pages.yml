@@ -1,10 +1,10 @@
-# Testa a biblioteca, publica o playground (src/NPortugol.Playground) no GitHub Pages e gera o
-# site do NPortugol Raio-X (src/NPortugol.RaioX) como artefato da execução. O Raio-X é um site
-# separado e cada repositório tem um único site no Pages, por isso ele não é publicado aqui.
+# Testa a biblioteca, publica o NPortugol Raio-X (src/NPortugol.RaioX) no GitHub Pages e gera o
+# site do playground (src/NPortugol.Playground) como artefato da execução. Cada repositório tem
+# um único site no Pages, por isso o playground não é publicado aqui.
 #
 # Antes da primeira execução: em Settings > Pages do repositório, escolha
 # "Source: GitHub Actions".
-name: Playground
+name: GitHub Pages
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
       - "src/NPortugol.Playground/**"
       - "src/NPortugol.RaioX/**"
       - "src/NPortugol.Tests/**"
-      - ".github/workflows/playground.yml"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -46,8 +46,8 @@ jobs:
       - name: Testar a biblioteca (netstandard2.0 em .NET 10)
         run: dotnet test src/NPortugol.Tests/NPortugol.Tests.csproj -f net10.0 -c Release
 
-      - name: Publicar o playground
-        run: dotnet publish src/NPortugol.Playground/NPortugol.Playground.csproj -c Release -o publicado
+      - name: Publicar o Raio-X
+        run: dotnet publish src/NPortugol.RaioX/NPortugol.RaioX.csproj -c Release -o publicado
 
       - name: Ajustar para o GitHub Pages
         run: |
@@ -61,7 +61,7 @@ jobs:
 
           # Sem isto o Pages ignora pastas que começam com "_" (como _framework).
           touch "$site/.nojekyll"
-          # Endereços desconhecidos voltam para o playground.
+          # Endereços desconhecidos voltam para o Raio-X.
           cp "$site/index.html" "$site/404.html"
 
       - uses: actions/upload-pages-artifact@v4
@@ -69,13 +69,13 @@ jobs:
           path: publicado/wwwroot
 
       # Site estático pronto para hospedar (com <base href="/">; ajuste se usar um subcaminho).
-      - name: Publicar o Raio-X
-        run: dotnet publish src/NPortugol.RaioX/NPortugol.RaioX.csproj -c Release -o raiox
+      - name: Publicar o playground
+        run: dotnet publish src/NPortugol.Playground/NPortugol.Playground.csproj -c Release -o playground
 
       - uses: actions/upload-artifact@v4
         with:
-          name: nportugol-raio-x
-          path: raiox/wwwroot
+          name: nportugol-playground
+          path: playground/wwwroot
 
   deploy:
     needs: build
