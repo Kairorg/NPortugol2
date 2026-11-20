@@ -56,10 +56,10 @@ The pipeline is **source → ANTLR 4 parse tree → AST → textual assembly ("A
     - Numbers written into SVG must use `CultureInfo.InvariantCulture`, because the app culture (pt-BR) would write decimal commas.
 
 ### Explainer video (`video/`)
-- A Remotion project (Node, not part of the solutions or `build.config`) that explains language, compiler and VM using the Raio-X. See `video/README.md`.
+- A Remotion project (Node, not part of the solutions or `build.config`) with two videos: `ComoFuncionaUmaLinguagem` (language, compiler and VM with the real VM loop code, `src/cenas/`) and `LinguagemParaTodos` (for laypeople, analogies only, no compiler/VM internals and no ANTLR, `src/leigo/`, scene ids `leigo-*`). See `video/README.md`.
 - The narration script is `video/src/narracao.ts`; `npm run narracao` generates the MP3s with ElevenLabs (key `ELEVENLABS_API_KEY` in the git-ignored root `.env`) and the cue times in `src/data/voiceover.json`, which set each scene's length.
 - `video/public/raiox/` holds real Raio-X captures, and `src/data/trace.ts` holds a real debug trace of `fatorial(3)`. If the compiler's ASM output changes, these captures go stale.
-- The rendered MP4 is not in git: it is an asset of the GitHub release `video`, and the Pages workflow downloads it into `video/` of the site, where `video.html` (linked from the Raio-X title bar) plays it. To update it, render and run `gh release upload video <mp4> --clobber`, then rerun the workflow.
+- The rendered MP4s are not in git: they are assets of the GitHub release `video`, and the Pages workflow downloads every `*.mp4` into `video/` of the site, where `video.html` (linked from the Raio-X title bar) plays them. To update it, render and run `gh release upload video <mp4> --clobber`, then rerun the workflow.
 
 ### Tests (`src/NPortugol.Tests`)
 - `GrammarTestCase` checks AST shapes (`BaseTest.BuildAST` returns the first `FUNC` node). `CompilerTestCase` checks ASM emission. `CompilerRegressionTestCase` pins the bugs fixed in the ANTLR 4 migration and the `CompilationException` behaviour.

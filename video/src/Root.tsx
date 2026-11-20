@@ -17,6 +17,15 @@ import { Chamadas } from "./cenas/Chamadas";
 import { Simulacao } from "./cenas/Simulacao";
 import { RaioX } from "./cenas/RaioX";
 import { Encerramento } from "./cenas/Encerramento";
+import { VideoLeigo, duracaoLeigo } from "./leigo/VideoLeigo";
+import { LeigoAbertura } from "./leigo/Abertura";
+import { Receita } from "./leigo/Receita";
+import { Idioma } from "./leigo/Idioma";
+import { Ingredientes } from "./leigo/Ingredientes";
+import { Tradutor } from "./leigo/Tradutor";
+import { Maquina } from "./leigo/Maquina";
+import { NoRaioX } from "./leigo/NoRaioX";
+import { Fim } from "./leigo/Fim";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -38,6 +47,17 @@ export const RemotionRoot: React.FC = () => {
         <Composition id="Simulacao" component={Simulacao} durationInFrames={framesDaCena("simulacao")} fps={30} width={1920} height={1080} />
         <Composition id="RaioX" component={RaioX} durationInFrames={framesDaCena("raiox")} fps={30} width={1920} height={1080} />
         <Composition id="Encerramento" component={Encerramento} durationInFrames={framesDaCena("encerramento")} fps={30} width={1920} height={1080} />
+      </Folder>
+      <Composition id="LinguagemParaTodos" component={VideoLeigo} durationInFrames={duracaoLeigo()} fps={30} width={1920} height={1080} />
+      <Folder name="Cenas-leigos">
+        <Composition id="Leigo-Abertura" component={LeigoAbertura} durationInFrames={framesDaCena("leigo-abertura")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Receita" component={Receita} durationInFrames={framesDaCena("leigo-receita")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Idioma" component={Idioma} durationInFrames={framesDaCena("leigo-linguagem")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Ingredientes" component={Ingredientes} durationInFrames={framesDaCena("leigo-ingredientes")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Tradutor" component={Tradutor} durationInFrames={framesDaCena("leigo-tradutor")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Maquina" component={Maquina} durationInFrames={framesDaCena("leigo-maquina")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-RaioX" component={NoRaioX} durationInFrames={framesDaCena("leigo-raiox")} fps={30} width={1920} height={1080} />
+        <Composition id="Leigo-Fim" component={Fim} durationInFrames={framesDaCena("leigo-encerramento")} fps={30} width={1920} height={1080} />
       </Folder>
     </>
   );
