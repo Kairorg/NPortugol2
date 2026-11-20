@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 
 namespace NPortugol.Runtime.Interop
@@ -19,7 +19,7 @@ namespace NPortugol.Runtime.Interop
         public void Registrar(string name, IFuncaoHospedada funcaoHospedada, bool isVoid)
         {
             if (hostTable.ContainsKey(name))
-                throw new Exception("FunÁ„o j· registrada.");
+                throw new Exception("Fun√ß√£o j√° registrada.");
 
             hostTable[name] = funcaoHospedada;
             voidmap[name] = isVoid;
@@ -38,7 +38,7 @@ namespace NPortugol.Runtime.Interop
         public void Registrar(string name, Func<object[], object> handler, bool isVoid)
         {
             if (hostTable.ContainsKey(name) || handlerTable.ContainsKey(name))
-                throw new Exception("FunÁ„o j· registrada.");
+                throw new Exception("Fun√ß√£o j√° registrada.");
 
             handlerTable[name] = handler;
             voidmap[name] = isVoid;

@@ -1,4 +1,4 @@
-using NUnit.Framework;
+ï»¿using NUnit.Framework;
 
 namespace NPortugol.Tests
 {
@@ -8,7 +8,7 @@ namespace NPortugol.Tests
         [Test]
         public void Should_Translate_Add_Expression()
         {
-            var script = "função soma() retorne 2 + 2 fim";
+            var script = "funÃ§Ã£o soma() retorne 2 + 2 fim";
 
             var bytecode = new Npc().Compilar(script);
 

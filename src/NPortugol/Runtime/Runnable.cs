@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 
 namespace NPortugol.Runtime
 {
@@ -65,7 +65,7 @@ namespace NPortugol.Runtime
             var symbol = ScriptSymbolTable[id];
 
             if (symbol == null) 
-                throw new Exception(string.Format("Vari·vel {0} n„o È um vetor.", id));
+                throw new Exception(string.Format("Vari√°vel {0} n√£o √© um vetor.", id));
 
             var array = symbol.Value as object[];
     
@@ -95,7 +95,7 @@ namespace NPortugol.Runtime
         public Function RetrieveFunction(string name)
         {
             if (!functionTable.ContainsKey(name))
-                throw new Exception("FunÁ„o '"+ name +"' n„o encontrada.");
+                throw new Exception("Fun√ß√£o '"+ name +"' n√£o encontrada.");
 
             return functionTable[name];
         }

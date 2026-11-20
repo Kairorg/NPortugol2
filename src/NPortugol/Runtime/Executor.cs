@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Linq;
 using NPortugol.Runtime.Exceptions;
@@ -178,7 +178,7 @@ namespace NPortugol.Runtime
                 case "float": return float.Parse(fp.ToString()) <= float.Parse(sp.ToString());
                 case "DateTime": return DateTime.Parse(fp.ToString()) <= DateTime.Parse(sp.ToString());
                 default:
-                    throw new Exception("Tipo na express„o lÛgica n„o reconhecido.");
+                    throw new Exception("Tipo na express√£o l√≥gica n√£o reconhecido.");
             }
         }
 
@@ -193,7 +193,7 @@ namespace NPortugol.Runtime
                 case "float": return float.Parse(fp.ToString()) >= float.Parse(sp.ToString());
                 case "DateTime": return DateTime.Parse(fp.ToString()) >= DateTime.Parse(sp.ToString());
                 default:
-                    throw new Exception("Tipo na express„o lÛgica n„o reconhecido.");
+                    throw new Exception("Tipo na express√£o l√≥gica n√£o reconhecido.");
             }
         }
 
@@ -208,7 +208,7 @@ namespace NPortugol.Runtime
                 case "float": return float.Parse(fp.ToString()) < float.Parse(sp.ToString());
                 case "DateTime": return DateTime.Parse(fp.ToString()) < DateTime.Parse(sp.ToString());
                 default:
-                    throw new Exception("Tipo na express„o lÛgica n„o reconhecido.");
+                    throw new Exception("Tipo na express√£o l√≥gica n√£o reconhecido.");
             }
         }
 
@@ -223,7 +223,7 @@ namespace NPortugol.Runtime
                 case "float": return float.Parse(fp.ToString()) > float.Parse(sp.ToString());
                 case "DateTime": return DateTime.Parse(fp.ToString()) > DateTime.Parse(sp.ToString());
                 default:
-                    throw new Exception("Tipo na express„o lÛgica n„o reconhecido.");
+                    throw new Exception("Tipo na express√£o l√≥gica n√£o reconhecido.");
             }
         }
 
@@ -508,7 +508,7 @@ namespace NPortugol.Runtime
         public object SymbolValue(string id)
         {
             if (SymbolTable[id] == null)
-                throw new Exception("N„o inicializada");
+                throw new Exception("N√£o inicializada");
 
             return SymbolTable[id].Value;
         }

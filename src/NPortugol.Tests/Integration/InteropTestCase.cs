@@ -1,4 +1,4 @@
-using NPortugol.Runtime;
+Ôªøusing NPortugol.Runtime;
 using NUnit.Framework;
 
 namespace NPortugol.Tests.Integration
@@ -21,8 +21,8 @@ namespace NPortugol.Tests.Integration
         {
             var script =
                 @"
-  funÁ„o calcular(venda)
-     vari·vel total
+  fun√ß√£o calcular(venda)
+     vari√°vel total
      total = venda.valor + 10
   fim
 ";
@@ -40,8 +40,8 @@ namespace NPortugol.Tests.Integration
         {
             var script =
                 @"
-  funÁ„o email(usuario)
-    vari·vel m
+  fun√ß√£o email(usuario)
+    vari√°vel m
     m = usuario.Email
   fim
 ";

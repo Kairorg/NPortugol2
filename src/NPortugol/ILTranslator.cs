@@ -1,11 +1,11 @@
-using System.Reflection.Emit;
+ï»¿using System.Reflection.Emit;
 using NPortugol.Runtime;
 using NPortugol.Runtime.Asm;
 
 namespace NPortugol
 {
     /// <summary>
-    /// Prova de conceito. Motivação para criação do projeto https://github.com/ricardoborges/NPortugol2
+    /// Prova de conceito. MotivaÃ§Ã£o para criaÃ§Ã£o do projeto https://github.com/ricardoborges/NPortugol2
     /// </summary>
     public class ILTranslator
     {

@@ -1,4 +1,4 @@
-using NUnit.Framework;
+ï»¿using NUnit.Framework;
 using PSharp.Runtime.Interop;
 using PSharp.Runtime.Tests.Integration.Instructions;
 
@@ -8,7 +8,7 @@ namespace PSharp.Runtime.Tests.Integration
     {
         public object Execute(params object[] parameters)
         {
-            return "Esta é uma mensagem from C#";
+            return "Esta Ã© uma mensagem from C#";
         }
     }
 
@@ -26,7 +26,7 @@ namespace PSharp.Runtime.Tests.Integration
 
             var result = function.Execute(null);
 
-            Assert.AreEqual("Esta é uma mensagem from C#", result);
+            Assert.AreEqual("Esta Ã© uma mensagem from C#", result);
         }
 
         [Test]
@@ -40,12 +40,12 @@ namespace PSharp.Runtime.Tests.Integration
 
             var result = function.Invoke(null);
 
-            Assert.AreEqual("Esta é uma mensagem from C#", result);
+            Assert.AreEqual("Esta Ã© uma mensagem from C#", result);
         }
 
         public object Mensagem(params object[] parameters)
         {
-            return "Esta é uma mensagem from C#";
+            return "Esta Ã© uma mensagem from C#";
         }
 
         public override Instruction[] GetInstructions()

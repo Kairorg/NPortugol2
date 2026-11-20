@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Globalization;
 
 namespace NPortugol.Runtime.Exceptions
@@ -12,7 +12,7 @@ namespace NPortugol.Runtime.Exceptions
             function = name;
         }
 
-        private const string ptMessage = "FunÁ„o {0} n„o encontrada. Certifique-se que o script contenha esta funÁ„o definida.";
+        private const string ptMessage = "Fun√ß√£o {0} n√£o encontrada. Certifique-se que o script contenha esta fun√ß√£o definida.";
 
         private const string enMessage = "{0} function not found. Ensure your script has that function defined.";
 

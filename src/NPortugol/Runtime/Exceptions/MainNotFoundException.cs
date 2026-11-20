@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Globalization;
 
 namespace NPortugol.Runtime.Exceptions
@@ -6,7 +6,7 @@ namespace NPortugol.Runtime.Exceptions
     public class MainNotFoundException: Exception
     {
         private const string ptMessage =
-            "FunÁ„o main n„o encontrada. Certifique-se que o script contenha uma funÁ„o main definida.";
+            "Fun√ß√£o main n√£o encontrada. Certifique-se que o script contenha uma fun√ß√£o main definida.";
 
         private const string enMessage = "Main function not found. Ensure your script has a main function defined.";
 

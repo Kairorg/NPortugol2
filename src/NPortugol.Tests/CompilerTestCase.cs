@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+Ôªøusing System.Collections.Generic;
 using NUnit.Framework;
 
 namespace NPortugol.Tests
@@ -22,7 +22,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Main_Function()
         {
-            var script = Compile("funÁ„o principal() fim");
+            var script = Compile("fun√ß√£o principal() fim");
 
             Assert.AreEqual("main:", script[0]);
             Assert.AreEqual("RET", script[2]);
@@ -31,7 +31,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Multi_Functions()
         {
-            var script = Compile("funÁ„o principal() fim funÁ„o do() fim funÁ„o other() fim");
+            var script = Compile("fun√ß√£o principal() fim fun√ß√£o do() fim fun√ß√£o other() fim");
 
             Assert.AreEqual("main:", script[0]);
             Assert.AreEqual("do:", script[3]);
@@ -41,7 +41,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Function_Params()
         {
-            var script = Compile("funÁ„o do(x) fim");
+            var script = Compile("fun√ß√£o do(x) fim");
 
             Assert.AreEqual("do:", script[0]);
             Assert.AreEqual("DCL x", script[1]);
@@ -51,7 +51,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Function_Call()
         {
-            var script = Compile("funÁ„o main() do(10) fim");
+            var script = Compile("fun√ß√£o main() do(10) fim");
 
             Assert.AreEqual("main:", script[0]);
             Assert.AreEqual("PUSH 10", script[2]);
@@ -61,7 +61,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Branching()
         {
-            var template = "funÁ„o main() se 1 {0} 1 ent„o fim fim";
+            var template = "fun√ß√£o main() se 1 {0} 1 ent√£o fim fim";
 
             var script = Compile(string.Format(template, "=="));
             Assert.AreEqual("JNE label_0", script[4]);
@@ -85,7 +85,7 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Branching_Else()
         {
-            var script = Compile("funÁ„o main() se 1 == 1 ent„o vari·vel x sen„o vari·vel y fim fim");
+            var script = Compile("fun√ß√£o main() se 1 == 1 ent√£o vari√°vel x sen√£o vari√°vel y fim fim");
 
             Assert.AreEqual("JNE label_0", script[4]);
             Assert.AreEqual("JMP label_1", script[6]);
@@ -96,26 +96,26 @@ namespace NPortugol.Tests
         [Test]
         public void Build_Loop_For()
         {
-            var script = Compile("funÁ„o main() para x = 1 atÈ 10 fim fim");
+            var script = Compile("fun√ß√£o main() para x = 1 at√© 10 fim fim");
             Assert.AreEqual(".label_0", script[4]);
             Assert.AreEqual("JGE label_1", script[7]);
             Assert.AreEqual("JMP label_0", script[9]);
             Assert.AreEqual(".label_1", script[10]);
 
-            script = Compile("funÁ„o main() para x = 1 atÈ 10 decrescente fim fim");
+            script = Compile("fun√ß√£o main() para x = 1 at√© 10 decrescente fim fim");
             Assert.AreEqual("JLE label_1", script[7]);
         }
 
         [Test]
         public void Build_Loop_While()
         {
-            var script = Compile("funÁ„o main() enquanto x < 10 x = x + 1 fim fim");
+            var script = Compile("fun√ß√£o main() enquanto x < 10 x = x + 1 fim fim");
         /*    Assert.AreEqual(".label_0", script[4]);
             Assert.AreEqual("JGE label_1", script[7]);
             Assert.AreEqual("JMP label_0", script[9]);
             Assert.AreEqual(".label_1", script[10]);
 
-            script = Compile("funÁ„o main() para x = 1 atÈ 10 decrescente fim fim");
+            script = Compile("fun√ß√£o main() para x = 1 at√© 10 decrescente fim fim");
             Assert.AreEqual("JLE label_1", script[7]);*/
         }
     }

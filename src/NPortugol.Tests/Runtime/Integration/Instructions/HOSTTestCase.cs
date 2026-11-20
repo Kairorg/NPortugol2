@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using NPortugol.Runtime;
 using NPortugol.Runtime.Interop;
@@ -10,7 +10,7 @@ namespace NPortugol.Tests.Runtime.Integration.Instructions
     {
         public object Executar(params object[] parameters)
         {
-            return "Esta é uma mensagem from C#";
+            return "Esta Ã© uma mensagem from C#";
         }
 
         public string Nome { get; set; }
@@ -40,7 +40,7 @@ namespace NPortugol.Tests.Runtime.Integration.Instructions
 
             context.Execute();
 
-            Assert.AreEqual("Esta é uma mensagem from C#", context.GetSymbolValue("main_x_0"));
+            Assert.AreEqual("Esta Ã© uma mensagem from C#", context.GetSymbolValue("main_x_0"));
         }
 
         [Test]

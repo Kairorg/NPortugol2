@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Globalization;
 using System.Threading;
 using NPortugol.Modulos;
@@ -20,7 +20,7 @@ namespace NPortugol.Tests.Integration
         {
             #region script
 
-            var script = @"funÁ„o nome(lista, i) vari·vel p p = lista[i] retorne p.Nome fim";
+            var script = @"fun√ß√£o nome(lista, i) vari√°vel p p = lista[i] retorne p.Nome fim";
 
             #endregion
 
@@ -41,7 +41,7 @@ namespace NPortugol.Tests.Integration
             #region script
             var script =
                 @"
-                funÁ„o fatorial(x)
+                fun√ß√£o fatorial(x)
 
                     se x == 0 retorne 1 fim
 
@@ -64,9 +64,9 @@ namespace NPortugol.Tests.Integration
         {
             #region script
             var script =
-            @"funÁ„o valida(cpf)
+            @"fun√ß√£o valida(cpf)
 
-                  vari·vel vet
+                  vari√°vel vet
 
                   vet = vetorizar(cpf)
 
@@ -77,13 +77,13 @@ namespace NPortugol.Tests.Integration
 	            retorne verdadeiro
             fim
 
-            funÁ„o validaDigito(vet, dig, tam)
-	            vari·vel soma, seq, digcalc, i, num, r
+            fun√ß√£o validaDigito(vet, dig, tam)
+	            vari√°vel soma, seq, digcalc, i, num, r
 
                     soma = 0
                     seq = tam + 1
 
-	            para i = 0 atÈ tam
+	            para i = 0 at√© tam
                        num = vet[i]
                        soma = soma + num * seq
                        seq = seq - 1
@@ -93,7 +93,7 @@ namespace NPortugol.Tests.Integration
 
                     se r < 2 
                         digcalc = 0 
-                    sen„o
+                    sen√£o
                         digcalc = 11 - r
                     fim
 
@@ -121,15 +121,15 @@ namespace NPortugol.Tests.Integration
         {
             #region script
             var script =
-            @"funÁ„o ordenar(v)
-              vari·vel i, j, t, tam
+            @"fun√ß√£o ordenar(v)
+              vari√°vel i, j, t, tam
 
               tam = v.tamanho
               
-              para t = 1 atÈ tam
-                para i = 1 atÈ tam
+              para t = 1 at√© tam
+                para i = 1 at√© tam
                     j = i-1
-                    se v[j] > v[i] ent„o
+                    se v[j] > v[i] ent√£o
                       aux = v[i]
                       v[i] = v[j]
                       v[j] = aux         
@@ -158,11 +158,11 @@ namespace NPortugol.Tests.Integration
             Thread.CurrentThread.CurrentCulture = new CultureInfo("pt-BR");
 
             var script =
-                @"funÁ„o melhor(a, g)
+                @"fun√ß√£o melhor(a, g)
 
                     se a < g * 0.7 
-                       retorne ""¡lcool""
-                    sen„o
+                       retorne ""√Ålcool""
+                    sen√£o
                        retorne ""Gasolina""
                     fim
                 fim";

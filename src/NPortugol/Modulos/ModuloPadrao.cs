@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NPortugol.Runtime.Interop;
@@ -45,7 +45,7 @@ namespace NPortugol.Modulos
         private static object Data(object[] parameters)
         {
             if (parameters.Length == 0)
-                throw new Exception("A função data requer o parametro com valor a ser convertido. Ex: data('01/01/2016')");
+                throw new Exception("A funÃ§Ã£o data requer o parametro com valor a ser convertido. Ex: data('01/01/2016')");
 
             return EnsureValidDate(parameters);
         }
@@ -58,7 +58,7 @@ namespace NPortugol.Modulos
         private static object NomeDoDia(object[] parameters)
         {
             if (parameters.Length == 0)
-                throw new Exception("A função nomedia requer um valor do tipo data. Ex: nomedia(data('01/01/2016'))");
+                throw new Exception("A funÃ§Ã£o nomedia requer um valor do tipo data. Ex: nomedia(data('01/01/2016'))");
 
             var date = EnsureValidDate(parameters);
 
@@ -68,11 +68,11 @@ namespace NPortugol.Modulos
             {
                 case DayOfWeek.Sunday: name = "Domingo"; break;
                 case DayOfWeek.Monday: name = "Segunda"; break;
-                case DayOfWeek.Tuesday: name = "Terça"; break;
+                case DayOfWeek.Tuesday: name = "TerÃ§a"; break;
                 case DayOfWeek.Wednesday: name = "Quarta"; break;
                 case DayOfWeek.Thursday: name = "Quinta"; break;
                 case DayOfWeek.Friday: name = "Sexta"; break;
-                case DayOfWeek.Saturday: name = "Sábado"; break;
+                case DayOfWeek.Saturday: name = "SÃ¡bado"; break;
             }
 
             return name;
@@ -85,7 +85,7 @@ namespace NPortugol.Modulos
             DateTime.TryParse(parameters[0].ToString(), out data);
 
             if (data < new DateTime(2, 1, 1))
-                throw new Exception(string.Format("Não foi possível converter '{0}' em uma data válida.", parameters[0]));
+                throw new Exception(string.Format("NÃ£o foi possÃ­vel converter '{0}' em uma data vÃ¡lida.", parameters[0]));
 
             return data;
         }

@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -32,7 +32,7 @@ namespace NPortugol.Runtime
             }
             catch
             {
-                throw new Exception(string.Format("Este arquivo n„o È um programa v·lido. {0}", filename));
+                throw new Exception(string.Format("Este arquivo n√£o √© um programa v√°lido. {0}", filename));
             }
         }
     }

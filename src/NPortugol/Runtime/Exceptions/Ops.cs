@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Globalization;
 
 namespace NPortugol.Runtime.Exceptions
@@ -7,10 +7,10 @@ namespace NPortugol.Runtime.Exceptions
     {
         private static readonly Dictionary<string, string> br = new Dictionary<string, string>
                                                                     {
-                                                                        {"no_variable", "Parece que você não declarou a variável '{0}'."},
-                                                                        {"no_var_init", "Você esqueceu de inicializar a variável '{0}'."},
-                                                                        {"is_not_variable", "Tem certeza que '{0}' pode ser usado como variável?"},
-                                                                        {"no_array_init", "Se pretende usar '{0}' como um vetor, você deve inicializa-lo antes."},
+                                                                        {"no_variable", "Parece que vocÃª nÃ£o declarou a variÃ¡vel '{0}'."},
+                                                                        {"no_var_init", "VocÃª esqueceu de inicializar a variÃ¡vel '{0}'."},
+                                                                        {"is_not_variable", "Tem certeza que '{0}' pode ser usado como variÃ¡vel?"},
+                                                                        {"no_array_init", "Se pretende usar '{0}' como um vetor, vocÃª deve inicializa-lo antes."},
                                                                     };
 
         private static readonly Dictionary<string, string> en = new Dictionary<string, string>
